@@ -16,4 +16,4 @@ router
   .del('/api/:name', controllers.api.Delect)
   .post('/auth/:action', controllers.auth.Post)
 
-module.exports = router
+export default router

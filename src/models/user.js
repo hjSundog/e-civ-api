@@ -16,7 +16,13 @@ const UserSchema = new Schema({
     type: [Schema.Types.ObjectId]
   },
   meta: {
-
+    age: {
+      type: Number
+    },
+    sex: {
+      type: String,
+      enum: ['male', 'female']
+    }
   }
 })
 

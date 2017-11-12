@@ -25,6 +25,16 @@ const env = process.env.NODE_ENV || 'development' // Current mode
 
 const publicKey = fs.readFileSync(path.join(__dirname, '../publicKey.pub'))
 
+if (env === 'development') { // logger
+  app.use((ctx, next) => {
+    const start = new Date()
+    return next().then(() => {
+      const ms = new Date() - start
+      console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+    })
+  })
+}
+
 app
   .use((ctx, next) => {
     if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
@@ -53,17 +63,6 @@ app
   // .use(PluginLoader(SystemConfig.System_plugin_path))
   .use(routes)
   .use(ErrorRoutes())
-
-if (env === 'development') { // logger
-  app.use((ctx, next) => {
-    const start = new Date()
-    return next().then(() => {
-      const ms = new Date() - start
-      console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-    })
-  })
-}
-
 app.listen(SystemConfig.API_server_port)
 
 console.log('Now start API server on port ' + SystemConfig.API_server_port + '...')

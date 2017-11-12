@@ -1,6 +1,7 @@
 module.exports = function () {
   return function (ctx, next) {
     return next().catch((err) => {
+      console.log(err)
       switch (err.status) {
         case 401:
           ctx.status = 200

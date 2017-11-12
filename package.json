@@ -1,5 +1,5 @@
 {
-  "name": "koa2-API-scaffold",
+  "name": "e-civ-api",
   "version": "1.0.0",
   "description": "Koa2 RESTful API 服务器的脚手架",
   "author": "轶哥 <a@wyr.me>",
@@ -10,6 +10,7 @@
     "production": "node dist/app.js"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "jsonwebtoken": "^8.1.0",
     "koa": "^2.3.0",
     "koa-body": "^2.5.0",
