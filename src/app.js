@@ -6,7 +6,7 @@ import {
   DB as DBConfig
 } from './config'
 import path from 'path'
-import MainRoutes from './routes/main-routes'
+import routes from './routes/index'
 import ErrorRoutesCatch from './middleware/ErrorRoutesCatch'
 import ErrorRoutes from './routes/error-routes'
 import jwt from 'koa-jwt'
@@ -39,7 +39,7 @@ app
   })
   .use(ErrorRoutesCatch())
   .use(KoaStatic('assets', path.resolve(__dirname, '../assets'))) // Static resource
-  .use(jwt({ secret: publicKey }).unless({ path: [/^\/public|\/user\/login|\/assets/] }))
+  .use(jwt({ secret: publicKey }).unless({ path: [/^\/public|\/users|\/login|\/assets/] }))
   .use(KoaBody({
     multipart: true,
     strict: false,
@@ -51,8 +51,7 @@ app
     textLimit: '10mb'
   })) // Processing request
   // .use(PluginLoader(SystemConfig.System_plugin_path))
-  .use(MainRoutes.routes())
-  .use(MainRoutes.allowedMethods())
+  .use(routes)
   .use(ErrorRoutes())
 
 if (env === 'development') { // logger
