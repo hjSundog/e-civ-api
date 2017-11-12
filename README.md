@@ -1,4 +1,4 @@
-Koa2 RESTful API 服务器脚手架
+e-civ 电子文明 Restful API
 =============================
 
 这是一个基于Koa2的轻量级RESTful API Server脚手架，支持ES6。
