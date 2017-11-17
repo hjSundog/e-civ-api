@@ -3,10 +3,15 @@ const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 
 const UserSchema = new Schema({
-  name: {
+  name: { // 显示名称，昵称
     type: String,
     unique: true,
     require: true
+  },
+  username: { // 登录用户名
+    type: String,
+    unique: true,
+    required: true
   },
   password: {
     type: String,
@@ -48,11 +53,12 @@ UserSchema.pre('save', function (next) {
 })
 // 校验用户输入密码是否正确
 UserSchema.methods.comparePassword = function (passw, cb) {
-  bcrypt.compare(passw, this.password, (err, isMatch) => {
-    if (err) {
-      return cb(err)
-    }
-    cb(null, isMatch)
+  console.log(this)
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(passw, this.password, (err, isMatch) => {
+      cb(err || null, isMatch)
+      resolve()
+    })
   })
 }
 
