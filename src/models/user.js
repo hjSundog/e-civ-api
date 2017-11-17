@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   name: { // 显示名称，昵称
     type: String,
     unique: true,
-    require: true
+    required: true
   },
   username: { // 登录用户名
     type: String,
@@ -15,7 +15,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    require: true
+    required: true
   },
   person_id: {
     type: [Schema.Types.ObjectId]
