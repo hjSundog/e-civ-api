@@ -9,9 +9,6 @@ const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'))
 //   userInfo: userInfo // 你要保存到token的数据
 // }, publicKey, { expiresIn: '7d' })
 
-/**
- * 检查授权是否合法
- */
 export let CheckAuth = (ctx) => {
   let token = ctx.request.header.authorization
   try {
@@ -36,14 +33,5 @@ export let CheckAuth = (ctx) => {
         errInfo: '解密错误'
       }
     }
-  }
-}
-
-export let Post = (ctx) => {
-  switch (ctx.params.action) {
-    case 'check':
-      return CheckAuth(ctx).then(result => { ctx.body = result })
-    default:
-      return CheckAuth(ctx).then(result => { ctx.body = result })
   }
 }
