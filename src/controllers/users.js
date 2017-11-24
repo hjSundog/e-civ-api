@@ -1,6 +1,11 @@
+import jwt from 'jsonwebtoken'
 import omit from '../lib/omit'
 
 import User from '../models/user'
+
+import path from 'path'
+import fs from 'fs'
+const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'))
 
 export let GetAll = async (ctx) => {
   // const _defaultOpts = {
@@ -56,23 +61,30 @@ export let Login = async (ctx) => {
       return userDoc
     })
   await userDoc.comparePassword(data.password, (err, isMatch) => {
+    // 去除内部字段和密码的用户信息
+    const openInfo = omit({
+      ...userDoc.toObject()
+    }, ['_id', '__v', 'password'])
     if (err) {
       console.error(err)
       ctx.body = {
         err: 'unknown error'
       }
-      // ctx.response.status = 500
+      ctx.response.status = 500
     } else {
       console.log(`isMatch: ${isMatch}`)
       if (isMatch) {
+        // 如果匹配则生成token
+        const token = jwt.sign(openInfo, publicKey, { expiresIn: '24h' })
         ctx.body = {
-          token: 'test'
+          ...openInfo,
+          token
         }
       } else {
         ctx.body = {
           err: 'password not match'
         }
-        // ctx.response.status = 403
+        ctx.response.status = 403
       }
     }
   })

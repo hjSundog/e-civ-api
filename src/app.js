@@ -9,8 +9,7 @@ import path from 'path'
 import routes from './routes/index'
 import ErrorRoutesCatch from './middleware/ErrorRoutesCatch'
 import ErrorRoutes from './routes/error-routes'
-import { promisify } from 'util'
-import jwt from 'koa-jwt'
+import jwt from 'jsonwebtoken'
 import fs from 'fs'
 import mongoose from 'mongoose'
 // import PluginLoader from './lib/PluginLoader'
@@ -50,9 +49,8 @@ app
   })
   .use(ErrorRoutesCatch())
   .use(KoaStatic('assets', path.resolve(__dirname, '../assets'))) // Static resource
-  // .use(jwt({ secret: publicKey }).unless({ path: [/^\/public|\/users|\/letters|\/login|\/assets/] }))
+  // 解析头部的access-token并插入ctx的authorization里作之后的权限认证
   .use(async (ctx, next) => {
-    console.log(ctx.header)
     /*
      * {
      *   token: string,
@@ -65,20 +63,18 @@ app
       token: ctx.header['access-token']
     }
     const { authorization } = ctx.header // 获取jwt
-    let payload
-    const verify = promisify(jwt.verify)
+
     if (authorization.token) {
-      payload = await verify(authorization.token.split(' ')[1], publicKey) // // 解密，获取payload
-      authorization.payload = {
-        payload
-      }
-    } else {
-      ctx.body = {
-        message: 'token 错误',
-        code: -1
+      try {
+        let decoded = jwt.verify(authorization.token, publicKey) // // 解密，获取payload
+        authorization.decoded = {
+          ...decoded
+        }
+      } catch (err) {
       }
     }
-    next()
+    console.log('authorization: ', authorization)
+    return next()
   })
   .use(KoaBody({
     multipart: true,

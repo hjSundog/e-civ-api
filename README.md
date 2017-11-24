@@ -7,15 +7,7 @@ e-civ 电子文明 RESTful API
 
 约定使用JSON格式传输数据，POST、PUT、DELET方法支持的Content-Type为`application/x-www-form-urlencoded、multipart/form-data、application/json`可配置支持跨域。非上传文件推荐application/x-www-form-urlencoded。通常情况下返回application/json格式的JSON数据。
 
-可选用redis等非关系型数据库。考虑RESTful API Server的实际开发需要，这里通过sequelize.js作为PostgreSQL, MySQL, MariaDB, SQLite, MSSQL关系型数据库的ORM，如无需关系型ORM，`npm remove sequelize -S`，然后删除`src/lib/sequelize.js`文件。
-
-此脚手架只安装了一些和Koa2不冲突的搭建RESTful API Server的必要插件，附带每一个插件的说明。采用ESlint进行语法检查。
-
-因此脚手架主要提供RESTful API，故暂时不考虑前端静态资源处理，只提供静态资源访问的基本方法便于访问用户上传到服务器的图片等资源。基本目录结构与vue-cli保持一致，可配合React、AngularJS、Vue.js等前端框架使用。在Cordova/PhoneGap中使用时需要开启跨域功能。
-
-**免责声明：** 此脚手架仅为方便开发提供基础环境，任何人或组织均可随意克隆使用，使用引入的框架需遵循原作者规定的相关协议（部分框架列表及来源地址在下方）。采用此脚手架产生的任何后果请自行承担，本人不对此脚手架负任何法律责任，使用即代表同意此条。
-
-目前暂未加入软件测试模块，下一个版本会加入该功能并提供集成方案。
+**项目使用Mongodb，请先确保你安装好了相关环境。**
 
 开发使用说明
 ------------
@@ -150,124 +142,124 @@ $ docker run -itd -p 80:80 -p 443:443 -v `pwd`/nginx_config:/etc/nginx/conf.d ng
 
 > 引入插件的版本将会持续更新
 
-引入的插件：  
+引入的插件：
 `koa@2 koa-body@2 koa-router@next koa-static2 koa-compose require-directory babel-cli babel-register babel-plugin-transform-runtime babel-preset-es2015 babel-preset-stage-2 gulp gulp-eslint eslint eslint-config-standard eslint-friendly-formatter eslint-plugin-html eslint-plugin-promise nodemailer promise-mysql 等`
 
-**koa2**: HTTP框架  
-&nbsp;Synopsis: HTTP framework.  
+**koa2**: HTTP框架
+&nbsp;Synopsis: HTTP framework.
 &nbsp;From: https://github.com/koajs/koa v2
 
-**koa-body**: body解析器  
-&nbsp;Synopsis: A full-feature koa body parser middleware.  
+**koa-body**: body解析器
+&nbsp;Synopsis: A full-feature koa body parser middleware.
 &nbsp;From: https://github.com/dlau/koa-body
 
-**koa-router**: Koa路由  
-&nbsp;Synopsis: Router middleware for koa.  
+**koa-router**: Koa路由
+&nbsp;Synopsis: Router middleware for koa.
 &nbsp;From: https://github.com/alexmingoia/koa-router/tree/master/
 
-**koa-static2**: 静态资源中间件  
-&nbsp;Synopsis: Middleware for Koa2 to serve a folder under a name declared by user.  
+**koa-static2**: 静态资源中间件
+&nbsp;Synopsis: Middleware for Koa2 to serve a folder under a name declared by user.
 &nbsp;From: https://github.com/Secbone/koa-static2
 
-**koa-compose**: 多个中间件组合成一个  
-&nbsp;Synopsis: Compose several middleware into one.  
+**koa-compose**: 多个中间件组合成一个
+&nbsp;Synopsis: Compose several middleware into one.
 &nbsp;From: https://github.com/koajs/compose
 
-**require-directory**: 递归遍历指定目录  
-&nbsp;Synopsis: Recursively iterates over specified directory.  
+**require-directory**: 递归遍历指定目录
+&nbsp;Synopsis: Recursively iterates over specified directory.
 &nbsp;From: https://github.com/troygoode/node-require-directory
 
-**babel-cli**: Babel编译ES6代码为ES5代码  
-&nbsp;Synopsis: Babel is a JavaScript compiler, ES6 to ES5.  
+**babel-cli**: Babel编译ES6代码为ES5代码
+&nbsp;Synopsis: Babel is a JavaScript compiler, ES6 to ES5.
 &nbsp;From: https://github.com/babel/babel/tree/master/packages/babel-cli
 
-**babel-register**: Babel开发环境实时编译ES6代码  
-&nbsp;Synopsis: Babel hook.  
+**babel-register**: Babel开发环境实时编译ES6代码
+&nbsp;Synopsis: Babel hook.
 &nbsp;From: https://github.com/babel/babel/tree/master/packages/babel-cli
 
-**babel-plugin-transform-runtime**: Babel配置ES6的依赖项  
-**babel-preset-es2015**: 同上  
+**babel-plugin-transform-runtime**: Babel配置ES6的依赖项
+**babel-preset-es2015**: 同上
 **babel-preset-stage-2**: 同上
 
-**gulp**: 基于流的自动化构建工具  
-&nbsp;Synopsis: Gulp is a toolkit for automating painful or time-consuming tasks.  
+**gulp**: 基于流的自动化构建工具
+&nbsp;Synopsis: Gulp is a toolkit for automating painful or time-consuming tasks.
 &nbsp;From: https://github.com/gulpjs/gulp
 
-**gulp-eslint**: gulp的ESLint检查插件  
-&nbsp;Synopsis: A gulp plugin for ESLint.  
+**gulp-eslint**: gulp的ESLint检查插件
+&nbsp;Synopsis: A gulp plugin for ESLint.
 &nbsp;From: https://github.com/adametry/gulp-eslint
 
-**gulp-nodemon**: 修改JS代码后自动重启  
-&nbsp;Synopsis: nodemon will watch the files in the directory in which nodemon was started, and if any files change, nodemon will automatically restart your node application.  
+**gulp-nodemon**: 修改JS代码后自动重启
+&nbsp;Synopsis: nodemon will watch the files in the directory in which nodemon was started, and if any files change, nodemon will automatically restart your node application.
 &nbsp;From: https://github.com/remy/nodemon
 
-**eslint**: JavaScript语法检查工具  
-&nbsp;Synopsis: A fully pluggable tool for identifying and reporting on patterns in JavaScript.  
+**eslint**: JavaScript语法检查工具
+&nbsp;Synopsis: A fully pluggable tool for identifying and reporting on patterns in JavaScript.
 &nbsp;From:
 
-**eslint-config-standard**: 一个ESlint配置&nbsp;Synopsis: ESLint Shareable Config for JavaScript Standard Style.  
+**eslint-config-standard**: 一个ESlint配置&nbsp;Synopsis: ESLint Shareable Config for JavaScript Standard Style.
 &nbsp;From: https://github.com/feross/eslint-config-standard
 
-**eslint-friendly-formatter**: 使得ESlint提示在Sublime Text或iterm2中更友好，Atom也有对应的ESlint插件。  
-&nbsp;Synopsis: A simple formatter/reporter for ESLint that's friendly with Sublime Text and iterm2 'click to open file' functionality  
+**eslint-friendly-formatter**: 使得ESlint提示在Sublime Text或iterm2中更友好，Atom也有对应的ESlint插件。
+&nbsp;Synopsis: A simple formatter/reporter for ESLint that's friendly with Sublime Text and iterm2 'click to open file' functionality
 &nbsp;From: https://github.com/royriojas/eslint-friendly-formatter
 
-**eslint-plugin-html**: 检查HTML文件中的JS代码规范  
-&nbsp;Synopsis: An ESLint plugin to extract and lint scripts from HTML files.  
+**eslint-plugin-html**: 检查HTML文件中的JS代码规范
+&nbsp;Synopsis: An ESLint plugin to extract and lint scripts from HTML files.
 &nbsp;From: https://github.com/BenoitZugmeyer/eslint-plugin-html
 
-**eslint-plugin-promise**: 检查JavaScript promises  
+**eslint-plugin-promise**: 检查JavaScript promises
 &nbsp;Synopsis: Enforce best practices for JavaScript promises.&nbsp;From: https://github.com/xjamundx/eslint-plugin-promise
 
-**eslint-plugin-promise**: ESlint依赖项  
+**eslint-plugin-promise**: ESlint依赖项
 &nbsp;Synopsis: ESlint Rules for the Standard Linter.&nbsp;From: https://github.com/xjamundx/eslint-plugin-standard
 
-**nodemailer**: 发送邮件  
-&nbsp;Synopsis: Send e-mails with Node.JS.  
+**nodemailer**: 发送邮件
+&nbsp;Synopsis: Send e-mails with Node.JS.
 &nbsp;From: https://github.com/nodemailer/nodemailer
 
-**promise-mysql**: 操作MySQL数据库依赖  
-&nbsp;Synopsis: Promise Mysql.  
+**promise-mysql**: 操作MySQL数据库依赖
+&nbsp;Synopsis: Promise Mysql.
 &nbsp;From: https://github.com/lukeb-uk/node-promise-mysql
 
-**sequelize**: 关系型数据库ORM  
-&nbsp;Synopsis: Sequelize is a promise-based ORM for Node.js.  
+**sequelize**: 关系型数据库ORM
+&nbsp;Synopsis: Sequelize is a promise-based ORM for Node.js.
 &nbsp;From: https://github.com/sequelize/sequelize
 
-**mysql**: MySQL库  
-&nbsp;Synopsis: A pure node.js JavaScript Client implementing the MySql protocol.  
+**mysql**: MySQL库
+&nbsp;Synopsis: A pure node.js JavaScript Client implementing the MySql protocol.
 &nbsp;From: https://github.com/mysqljs/mysql
 
 支持Koa2的中间件列表：https://github.com/koajs/koa/wiki
 
 **其它经常配合Koa2的插件：**
 
-**koa-session2**: Session中间件  
-&nbsp;Synopsis: Middleware for Koa2 to get/set session.  
+**koa-session2**: Session中间件
+&nbsp;Synopsis: Middleware for Koa2 to get/set session.
 &nbsp;From: https://github.com/Secbone/koa-session2
 
-**koa-nunjucks-2**:  
+**koa-nunjucks-2**:
 一个好用的模版引擎，可用于前后端，nunjucks：https://github.com/mozilla/nunjucks
 
-**koa-favicon**:  
+**koa-favicon**:
 Koa的favicon中间件：https://github.com/koajs/favicon
 
-**koa-server-push**:  
+**koa-server-push**:
 HTTP2推送中间件：https://github.com/silenceisgolden/koa-server-push
 
-**koa-convert**: 转换旧的中间件支持Koa2  
-&nbsp;Synopsis: Convert koa generator-based middleware to promise-based middleware.  
+**koa-convert**: 转换旧的中间件支持Koa2
+&nbsp;Synopsis: Convert koa generator-based middleware to promise-based middleware.
 &nbsp;From: https://github.com/koajs/convert
 
-**koa-logger**: 请求日志输出，需要配合上面的插件使用  
-&nbsp;Synopsis: Development style logger middleware for Koa.  
+**koa-logger**: 请求日志输出，需要配合上面的插件使用
+&nbsp;Synopsis: Development style logger middleware for Koa.
 &nbsp;From: https://github.com/koajs/logger
 
-**koa-onerror**:  
+**koa-onerror**:
 Koa的错误拦截中间件，需要配合上面的插件使用：https://github.com/koajs/onerror
 
-**koa-multer**: 处理数据中间件  
-&nbsp;Synopsis: Multer is a node.js middleware for handling multipart/form-data for koa.  
+**koa-multer**: 处理数据中间件
+&nbsp;Synopsis: Multer is a node.js middleware for handling multipart/form-data for koa.
 &nbsp;From: https://github.com/koa-modules/multer
 
 目录结构说明
@@ -559,7 +551,7 @@ sequelize                3.30.2  3.30.4  3.30.4  koa2-API-
 2.	修复了`src/lib/mysql.js`引用路径错误的BUG。
 3.	修改了`src/controllers/api.js`GET参数获取的示例。
 
-*v0.0.8 2017年03月01日23:03:44*  
+*v0.0.8 2017年03月01日23:03:44*
 1、在src/app.js 18行 后添加了
 
 ```
@@ -570,17 +562,17 @@ sequelize                3.30.2  3.30.4  3.30.4  koa2-API-
 
 以免表单过长导致提交失败。
 
-*v0.0.7 2017年02月18日19:01:48*  
+*v0.0.7 2017年02月18日19:01:48*
 1、修改了index.js、config.js（详情请看github记录），完善了对跨域的处理。 更新建议：对应github修改记录同步修改，方便将来部署调试。
 
-*v0.0.6 2017年02月17日21:17:23*  
+*v0.0.6 2017年02月17日21:17:23*
 1、修改了src/lib/sequelize.js文件,添加了对utf8mb4的支持（要求MySQL版本>5.5）。
 
-*v0.0.5 2017年02月12日01:25:34*  
-1、修改了gulpfile.js文件，在更改文件热重启的时候无需检查全部文件，仅检查改动文件，开发速度更快。  
+*v0.0.5 2017年02月12日01:25:34*
+1、修改了gulpfile.js文件，在更改文件热重启的时候无需检查全部文件，仅检查改动文件，开发速度更快。
 2、修改了package.json中"start"项的值为"gulp nodemon"配合gulpfile.js文件的修改。
 
-*v0.0.4 2017年02月07日15:57:17*  
-1、修改了部分配置文件的配置方法，使之更为规范（老版本用户无须理会，对程序没有影响）。  
-2、修改了eslintrc.js文件中的JavaScript版本配置，改为ES8，兼容async、await。  
+*v0.0.4 2017年02月07日15:57:17*
+1、修改了部分配置文件的配置方法，使之更为规范（老版本用户无须理会，对程序没有影响）。
+2、修改了eslintrc.js文件中的JavaScript版本配置，改为ES8，兼容async、await。
 3、修改gulpfile.js文件第12行，检查`src/**/*.js`文件。
