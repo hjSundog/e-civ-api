@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import omit from '../lib/omit'
 
 import User from '../models/user'
+import { authInterceptor } from '../tool/Auth'
 
 import path from 'path'
 import fs from 'fs'
@@ -16,6 +17,11 @@ export let GetAll = async (ctx) => {
   //   ..._defaultOpts,
   //   ctx.params
   // }
+
+  // 身份认证拦截器
+  if (!authInterceptor(ctx)) {
+    return
+  }
   await User.find()
     .select({ name: 1, username: 1, person_id: 1, meta: 1, _id: 0 })
     .exec((err, userDocs) => {
