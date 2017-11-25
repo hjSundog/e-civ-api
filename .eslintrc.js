@@ -12,6 +12,9 @@ module.exports = {
   env: {
         'node': true
   },
+  globals: {
+    "logger": false
+  },
   rules: {
     // allow console
     'no-console': 0,

@@ -1,4 +1,5 @@
 import Person from '../models/person'
+import omit from '../lib/omit'
 
 export let GetById = async (ctx) => {
   if (!ctx.params.name) {
@@ -40,7 +41,7 @@ export let Post = async (ctx) => {
     }
     console.log(person)
     ctx.body = omit({
-      ...user
+      ...person
     }, ['_id'])
   })
 }

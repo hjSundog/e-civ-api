@@ -9,10 +9,15 @@ import path from 'path'
 import routes from './routes/index'
 import ErrorRoutesCatch from './middleware/ErrorRoutesCatch'
 import ErrorRoutes from './routes/error-routes'
+
+import customizedLogger from './tool/customized-winston-logger'
+
 import jwt from 'jsonwebtoken'
 import fs from 'fs'
 import mongoose from 'mongoose'
 // import PluginLoader from './lib/PluginLoader'
+
+global.logger = customizedLogger
 
 mongoose.connect(DBConfig.url)
 mongoose.connection.on('connected', () => {
@@ -30,7 +35,7 @@ if (env === 'development') { // logger
     const start = new Date()
     return next().then(() => {
       const ms = new Date() - start
-      console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+      logger.info(`${ctx.method} ${ctx.url} - ${ms}ms`)
     })
   })
 }
