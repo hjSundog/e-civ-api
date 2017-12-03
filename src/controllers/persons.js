@@ -21,15 +21,35 @@ export let GetById = async (ctx) => {
 export let Post = async (ctx) => {
   let data
   try {
-    data = JSON.parse(ctx.request.body)
+    if(typeof ctx.request.body === 'object'){
+      data = ctx.request.body
+    }else{
+      data = JSON.parse(ctx.request.body)
+    }
+    console.log(data);
   } catch (e) {
     console.error(e)
     return
   }
   var person = new Person({
     name: data.name,
-    password: data.password,
     person_id: null,
+    attributes: {
+      str: 1,
+      dex: 1,
+      con: 1,
+      int: 1,
+      wis: 1,
+      cha: 1
+    },
+    belogings: [],
+    conditions: {
+      health: 100,
+      maxHealth: 100,
+      stamina: 120,
+      maxStamina: 120
+    },
+    status: [],
     meta: {
       age: data.meta.age || null,
       sex: data.meta.sex || 'female'
@@ -41,44 +61,62 @@ export let Post = async (ctx) => {
     }
     console.log(person)
     ctx.body = omit({
-      ...person
-    }, ['_id'])
+      ...person.toObject()
+    }, ['_id','__v'])
   })
 }
 
 
-export let GetAllBelogings = async (ctx) => {
+export let GetAllBelongs = async (ctx) => {
     if (!ctx.params.id) {
     throw new Error('no person id')
   }
   await Person.findOne()
     .where('id').equals(ctx.params.id)
     .select('belogings')
-    .exec((err, belogingsDoc) => {
+    .exec((err, belongsDoc) => {
       if (err) {
         throw new Error(err.toString())
       }
       ctx.body = {
-        ...beklogingsDoc.toObject()
+        ...belongsDoc.map(beloging => {
+          return omit({
+            ...beloging.toObject()
+          },['_id','__v'])
+        })
       }
     })
 }
 
 
-export let GetBelogingsOf = async (ctx) => {
+export let GetBelongsOf = async (ctx) => {
     if (!ctx.params.id) {
     throw new Error('no person')
   }
   await Person.findOne()
     .where('id').equals(ctx.params.id)
     .select('belogings')
-    .exec((err, belogingsDoc) => {
+    .exec((err, belongsDoc) => {
       if (err) {
         throw new Error(err.toString())
       }
       //查询选择type
       ctx.body = {
-        ...beklogingsDoc.toObject()
+        ...belongsDoc.toObject()
       }
     })
+}
+
+
+export let CreateBelong = async ctx => {
+  let data 
+}
+
+
+export let GetBelong = async ctx => {
+  let data
+}
+
+export let UseBelong = async ctx => {
+  let data
 }

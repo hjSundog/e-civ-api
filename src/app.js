@@ -96,6 +96,13 @@ app
   .use(ErrorRoutes())
 app.listen(SystemConfig.API_server_port)
 
+
+process.on('uncaughtException', function (err) {
+  //打印出错误
+  console.log('unhandlerr:'+err);
+  //打印出错误的调用栈方便调试
+  console.log(err.stack);
+});
 console.log('Now start API server on port ' + SystemConfig.API_server_port + '...')
 
 export default app

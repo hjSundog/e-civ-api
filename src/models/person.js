@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const PersonSchema = new Schema({
-  user_id: {
+  person_id: {
     type: [Schema.Types.ObjectId]
   },
   name: {
@@ -10,39 +10,42 @@ const PersonSchema = new Schema({
     unique: true,
     require: true
   },
+  belongs: {
+    type: [Schema.Types.ObjectId]
+  },
   conditions: {
     health: {
-      type: [Number]
+      type: Number
     },
     maxHealth: {
-      type: [Number]
+      type: Number
     },
     stamina: {
-      type: [Number]
+      type: Number
     },
     maxStamina: {
-      type: [Number]
+      type: Number
     }
   },
   status: [],
   attributes: {
     str: {
-      type: [Number]
+      type: Number
     },
     dex: {
-      type: [Number]
+      type: Number
     },
     con: {
-      type: [Number]
+      type: Number
     },
     int: {
-      type: [Number]
+      type: Number
     },
     wis: {
-      type: [Number]
+      type: Number
     },
     cha: {
-      type: [Number]
+      type: Number
     }
   }
 })
