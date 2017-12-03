@@ -45,3 +45,40 @@ export let Post = async (ctx) => {
     }, ['_id'])
   })
 }
+
+
+export let GetAllBelogings = async (ctx) => {
+    if (!ctx.params.id) {
+    throw new Error('no person id')
+  }
+  await Person.findOne()
+    .where('id').equals(ctx.params.id)
+    .select('belogings')
+    .exec((err, belogingsDoc) => {
+      if (err) {
+        throw new Error(err.toString())
+      }
+      ctx.body = {
+        ...beklogingsDoc.toObject()
+      }
+    })
+}
+
+
+export let GetBelogingsOf = async (ctx) => {
+    if (!ctx.params.id) {
+    throw new Error('no person')
+  }
+  await Person.findOne()
+    .where('id').equals(ctx.params.id)
+    .select('belogings')
+    .exec((err, belogingsDoc) => {
+      if (err) {
+        throw new Error(err.toString())
+      }
+      //查询选择type
+      ctx.body = {
+        ...beklogingsDoc.toObject()
+      }
+    })
+}
