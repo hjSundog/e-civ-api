@@ -1,29 +1,22 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const ActionSchema = new Schema({
+const BelongingSchema = new Schema({
   owner_id: {
     type: Schema.Types.ObjectId
   },
   name: {
     type: String,
-    unique: true,
     require: true
-  },
-  duration: {
-    type: Date
   },
   type: {
     type: String,
     require: true
   },
+  result: {},
   des: {
     type: String
-  },
-  disperseable: {
-    type: String
-  },
-  results: {}
+  }
 })
 
-module.exports = mongoose.model('Action', ActionSchema)
+module.exports = mongoose.model('Belonging', BelongingSchema)

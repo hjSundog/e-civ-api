@@ -2,25 +2,22 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const GroupSchema = new Schema({
-    group_id: {
-        type: Schema.Types.ObjectId
-    },
-    name: {
-        type: String,
-        unique: true,
-        require: true
-    },
-    type: {
-        type: String,
-        require: true
-    },
-    sub_group:{
-        type:[Schema.Types.ObjectId]
-    },
-    rank: {
-        type:Number
-    },
-/*     categories: {
+  name: {
+    type: String,
+    unique: true,
+    require: true
+  },
+  type: {
+    type: String,
+    require: true
+  },
+  sub_group: {
+    type: [Schema.Types.ObjectId]
+  },
+  rank: {
+    type: Number
+  },
+  /*     categories: {
         leaders: {
 
         },
@@ -31,7 +28,7 @@ const GroupSchema = new Schema({
 
         },
         policy: {
-            type: 
+            type:
         }
     },
    attributes: {
@@ -41,20 +38,20 @@ const GroupSchema = new Schema({
         energy: {
             type: Number
         }
-    },*/
-    totalMember: {
-        type: Number
-    },
-    relationship: {
-        positive: [Schema.Types.ObjectId],
-        negtive: [Schema.Types.ObjectId]
-    },
-    time: {
-        type: Date
-    },
-    info: {
-        type: String
-    }
+    }, */
+  totalMember: {
+    type: Number
+  },
+  relationship: {
+    positive: [Schema.Types.ObjectId],
+    negtive: [Schema.Types.ObjectId]
+  },
+  time: {
+    type: Date
+  },
+  info: {
+    type: String
+  }
 })
 
-module.exports = mongoose.model('Group',GroupSchema)
+module.exports = mongoose.model('Group', GroupSchema)

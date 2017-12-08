@@ -1,18 +1,20 @@
+import Belonging from './belonging'
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const PersonSchema = new Schema({
-  person_id: {
-    type: [Schema.Types.ObjectId]
+  user_id: {
+    type: Schema.Types.ObjectId
   },
   name: {
     type: String,
     unique: true,
     require: true
   },
-  belongs: {
-    type: [Schema.Types.ObjectId]
-  },
+  belongs: [{
+    type: Schema.Types.ObjectId,
+    ref: Belonging
+  }],
   conditions: {
     health: {
       type: Number

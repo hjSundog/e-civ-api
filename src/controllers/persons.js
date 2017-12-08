@@ -1,5 +1,6 @@
 import Person from '../models/person'
 import omit from '../lib/omit'
+import Belong from '../models/belonging'
 
 export let GetById = async (ctx) => {
   if (!ctx.params.name) {
@@ -21,12 +22,12 @@ export let GetById = async (ctx) => {
 export let Post = async (ctx) => {
   let data
   try {
-    if(typeof ctx.request.body === 'object'){
+    if (typeof ctx.request.body === 'object') {
       data = ctx.request.body
-    }else{
+    } else {
       data = JSON.parse(ctx.request.body)
     }
-    console.log(data);
+    console.log(data)
   } catch (e) {
     console.error(e)
     return
@@ -62,17 +63,16 @@ export let Post = async (ctx) => {
     console.log(person)
     ctx.body = omit({
       ...person.toObject()
-    }, ['_id','__v'])
+    }, ['_id', '__v'])
   })
 }
 
-
 export let GetAllBelongs = async (ctx) => {
-    if (!ctx.params.id) {
+  if (!ctx.params.owner_id) {
     throw new Error('no person id')
   }
   await Person.findOne()
-    .where('id').equals(ctx.params.id)
+    .where('id').equals(ctx.params.owner_id)
     .select('belogings')
     .exec((err, belongsDoc) => {
       if (err) {
@@ -82,41 +82,141 @@ export let GetAllBelongs = async (ctx) => {
         ...belongsDoc.map(beloging => {
           return omit({
             ...beloging.toObject()
-          },['_id','__v'])
+          }, ['_id', '__v'])
         })
       }
     })
 }
 
-
 export let GetBelongsOf = async (ctx) => {
-    if (!ctx.params.id) {
+  if (!ctx.params.owner_id) {
     throw new Error('no person')
   }
   await Person.findOne()
-    .where('id').equals(ctx.params.id)
-    .select('belogings')
+    .where('_id').equals(ctx.params.owner_id)
+    .populate({
+      path: 'belongs',
+      match: {type: ctx.params.type}
+    })
     .exec((err, belongsDoc) => {
       if (err) {
         throw new Error(err.toString())
       }
-      //查询选择type
       ctx.body = {
-        ...belongsDoc.toObject()
+        ...belongsDoc.belongs.map(belong => {
+          return omit({
+            ...belong.toObject()
+          }, ['_id', '__v'])
+        })
       }
     })
 }
 
-
 export let CreateBelong = async ctx => {
-  let data 
+  let data
+  try {
+    if (typeof ctx.request.body === 'object') {
+      data = ctx.request.body
+    } else {
+      data = JSON.parse(ctx.request.body)
+    }
+    console.log(data)
+  } catch (e) {
+    console.error(e)
+    return
+  }
+  if (!ctx.params.owner_id) {
+    throw new Error('no person')
+  }
+  if (!ctx.params.id) {
+    throw new Error('no belong')
+  }
+
+  await Person.findOne()
+    .where('_id').equals(ctx.params.owner_id)
+    .select('belongs')
+    .exec((err, belongDoc) => {
+      if (err) {
+        throw new Error(err.toString())
+      }
+      // 添加
+      var belong = new Belong({
+        owner_id: ctx.params.owner_id,
+        name: data.name,
+        targetType: [''],
+        type: data.type,
+        status: data.status || 'active',
+        result: null,
+        des: data.des || '',
+        needs: data.needs
+      })
+      belong.save((err, belong) => {
+        if (err) {
+          ctx.body = {
+            err: err.errmsg
+          }
+          ctx.response.status = 422
+        } else {
+          ctx.body = omit({
+            ...belong.toObject()
+          }, ['_id', '__v'])
+        }
+      })
+    })
 }
 
-
 export let GetBelong = async ctx => {
-  let data
+  if (!ctx.params.owner_id) {
+    throw new Error('no person')
+  }
+  if (!ctx.params.id) {
+    throw new Error('no belong')
+  }
+  await Person.findOne()
+    .where('_id').equals(ctx.params.owner_id)
+    .populate({
+      path: 'belongs',
+      match: {
+        _id: ctx.params.id
+      }
+    })
+    .exec((err, belongDoc) => {
+      if (err) {
+        throw new Error(err.toString())
+      }
+      ctx.body = omit({
+        ...belongDoc.toObject()
+      }, ['_id', '__v'])
+    })
 }
 
 export let UseBelong = async ctx => {
   let data
+  try {
+    if (typeof ctx.request.body === 'object') {
+      data = ctx.request.body
+    } else {
+      data = JSON.parse(ctx.request.body)
+    }
+    console.log(data)
+  } catch (e) {
+    console.error(e)
+    return
+  }
+  if (!ctx.params.owner_id) {
+    throw new Error('no person')
+  }
+  if (!ctx.params.id) {
+    throw new Error('no belong')
+  }
+
+  await Person.findOne()
+    .where('_id').equals(ctx.params.owner_id)
+    .select('belongs')
+    .exec((err, belongDoc) => {
+      if (err) {
+        throw new Error(err.toString())
+      }
+      // 删除
+    })
 }

@@ -56,11 +56,11 @@ gulp.task('ESlint_nodemon', ['ESlint'], function () {
 
   return stream
     .on('restart', function () {
-      // console.log('Application has restarted!')
+      console.log('Application has restarted!')
     })
     .on('crash', function () {
       console.error('Application has crashed!\n')
-      // stream.emit('restart', 20)  // restart the server in 20 seconds
+      stream.emit('restart', 20)
     })
 })
 

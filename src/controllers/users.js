@@ -44,7 +44,7 @@ export let GetByName = async (ctx) => {
     .where('name').equals(ctx.params.name)
     .select({ name: 1, person_id: 1, meta: 1, _id: 0 })
     .exec((err, userDoc) => {
-      console.log('userDoc'+userDoc)
+      console.log('userDoc' + userDoc)
       if (err || !userDoc) {
         throw new Error(err.toString())
       }
@@ -134,4 +134,3 @@ export let Signup = async (ctx) => {
     console.log(err.errmsg)
   })
 }
-
