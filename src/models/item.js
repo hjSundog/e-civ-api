@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const BelongingSchema = new Schema({
+const ItemSchema = new Schema({
   owner_id: {
     type: Schema.Types.ObjectId
   },
@@ -10,8 +10,7 @@ const BelongingSchema = new Schema({
     require: true
   },
   type: {
-    type: String,
-    require: true
+    type: String
   },
   result: {},
   des: {
@@ -19,4 +18,4 @@ const BelongingSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('Belonging', BelongingSchema)
+module.exports = mongoose.model('Item', ItemSchema)

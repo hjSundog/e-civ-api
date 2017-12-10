@@ -5,10 +5,10 @@ const router = new KoaRouter({ prefix: '/persons' })
 router
   .get('/:id', controllers.persons.GetById)
   .post('/', controllers.persons.Post) // create a person
-  .post('/:id/belogings', controllers.persons.CreateBelong)
-  .get('/:id/belogings', controllers.persons.GetAllBelongs)
-  .get('/:id/belogings/:type', controllers.persons.GetBelongsOf)
-  .get('/:id/belogings/:belogingsId', controllers.persons.GetBelong)
-  .delete('/:id/belogings/:belogingsId', controllers.persons.UseBelong)
+  .post('/:id/items', controllers.persons.CreateItem)
+  .get('/:id/items', controllers.persons.GetAllItems)
+  .get('/:id/items/:type', controllers.persons.GetItemsOf)
+  .get('/:id/items/:itemId', controllers.persons.GetItem)
+  .delete('/:id/items/:itemId', controllers.persons.UseItem)
 
 export default router

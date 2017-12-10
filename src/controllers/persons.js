@@ -1,6 +1,5 @@
 import Person from '../models/person'
 import omit from '../lib/omit'
-import Belong from '../models/belonging'
 
 export let GetById = async (ctx) => {
   if (!ctx.params.name) {
@@ -66,53 +65,84 @@ export let Post = async (ctx) => {
     }, ['_id', '__v'])
   })
 }
-
-export let GetAllBelongs = async (ctx) => {
-  if (!ctx.params.owner_id) {
+/**
+ * 获取用户所有物品
+ * @param {*id} ctx 用户id
+ */
+export let GetAllItems = async (ctx) => {
+  if (!ctx.params.id) {
     throw new Error('no person id')
   }
-  await Person.findOne()
-    .where('id').equals(ctx.params.owner_id)
-    .select('belogings')
-    .exec((err, belongsDoc) => {
+  await Person.findById(ctx.params.id)
+    .populate('items')
+    .exec((err, ItemsDoc) => {
       if (err) {
         throw new Error(err.toString())
       }
+      let rt = ItemsDoc.items.map(Item => {
+        return omit({
+          ...Item.toObject()
+        }, ['_id', '__v'])
+      })
+      console.log(rt)
       ctx.body = {
-        ...belongsDoc.map(beloging => {
-          return omit({
-            ...beloging.toObject()
-          }, ['_id', '__v'])
-        })
+        rt
       }
+      // let tasks = ItemsDoc.Items.map(beloging => {
+      //   return new Promise((resolve, reject) => {
+      //     Iteming.findById(beloging)
+      //       .exec((err, Item) => {
+      //         if (err) {
+      //           throw new Error(err)
+      //         }
+      //         resolve(omit({
+      //           ...Item.toObject()
+      //         }, ['_id', '__v'])
+      //         )
+      //       })
+      //   })
+      // })
+
+      // Promise.all(tasks, (values) => {
+      //   ctx.body = {
+      //     ...values
+      //   }
+      // })
     })
 }
-
-export let GetBelongsOf = async (ctx) => {
-  if (!ctx.params.owner_id) {
+/**
+ * 获取某个用户的某种类型的物品
+ * @param {*id} ctx 用户id
+ * @param {*type} ctx 物品类型
+ */
+export let GetItemsOf = async (ctx) => {
+  if (!ctx.params.id) {
     throw new Error('no person')
   }
   await Person.findOne()
-    .where('_id').equals(ctx.params.owner_id)
+    .where('_id').equals(ctx.params.id)
     .populate({
-      path: 'belongs',
+      path: 'items',
       match: {type: ctx.params.type}
     })
-    .exec((err, belongsDoc) => {
+    .exec((err, ItemsDoc) => {
       if (err) {
         throw new Error(err.toString())
       }
       ctx.body = {
-        ...belongsDoc.belongs.map(belong => {
+        ...ItemsDoc.items.map(Item => {
           return omit({
-            ...belong.toObject()
+            ...Item.toObject()
           }, ['_id', '__v'])
         })
       }
     })
 }
-
-export let CreateBelong = async ctx => {
+/**
+ * 用户创建对象
+ * @param {*id} ctx 用户id
+ */
+export let CreateItem = async ctx => {
   let data
   try {
     if (typeof ctx.request.body === 'object') {
@@ -125,72 +155,47 @@ export let CreateBelong = async ctx => {
     console.error(e)
     return
   }
-  if (!ctx.params.owner_id) {
+  if (!ctx.params.id) {
     throw new Error('no person')
   }
-  if (!ctx.params.id) {
-    throw new Error('no belong')
-  }
+  data = {id: ctx.params.id, ...data}
 
-  await Person.findOne()
-    .where('_id').equals(ctx.params.owner_id)
-    .select('belongs')
-    .exec((err, belongDoc) => {
-      if (err) {
-        throw new Error(err.toString())
-      }
-      // 添加
-      var belong = new Belong({
-        owner_id: ctx.params.owner_id,
-        name: data.name,
-        targetType: [''],
-        type: data.type,
-        status: data.status || 'active',
-        result: null,
-        des: data.des || '',
-        needs: data.needs
-      })
-      belong.save((err, belong) => {
-        if (err) {
-          ctx.body = {
-            err: err.errmsg
-          }
-          ctx.response.status = 422
-        } else {
-          ctx.body = omit({
-            ...belong.toObject()
-          }, ['_id', '__v'])
-        }
-      })
-    })
+  await Person.findByIdAndCreateItem(data)
 }
-
-export let GetBelong = async ctx => {
-  if (!ctx.params.owner_id) {
+/**
+ * 获取用户某个物品
+ * @param {*id} ctx 用户id
+ * @param {*itemId} ctx 物品id
+ */
+export let GetItem = async ctx => {
+  if (!ctx.params.id) {
     throw new Error('no person')
   }
-  if (!ctx.params.id) {
-    throw new Error('no belong')
+  if (!ctx.params.itemId) {
+    throw new Error('no Item')
   }
-  await Person.findOne()
-    .where('_id').equals(ctx.params.owner_id)
+  await Person.findById(ctx.params.id)
     .populate({
-      path: 'belongs',
+      path: 'items',
       match: {
-        _id: ctx.params.id
+        _id: ctx.params.itemId
       }
     })
-    .exec((err, belongDoc) => {
+    .exec((err, ItemDoc) => {
       if (err) {
         throw new Error(err.toString())
       }
       ctx.body = omit({
-        ...belongDoc.toObject()
+        ...ItemDoc.toObject()
       }, ['_id', '__v'])
     })
 }
-
-export let UseBelong = async ctx => {
+/**
+ * 使用/消耗物品
+ * @param {*id} ctx 用户id
+ * @param {*itemId} ctx 物品id
+ */
+export let UseItem = async ctx => {
   let data
   try {
     if (typeof ctx.request.body === 'object') {
@@ -203,20 +208,11 @@ export let UseBelong = async ctx => {
     console.error(e)
     return
   }
-  if (!ctx.params.owner_id) {
+  if (!ctx.params.id) {
     throw new Error('no person')
   }
-  if (!ctx.params.id) {
-    throw new Error('no belong')
+  if (!ctx.params.itemId) {
+    throw new Error('no Item')
   }
-
-  await Person.findOne()
-    .where('_id').equals(ctx.params.owner_id)
-    .select('belongs')
-    .exec((err, belongDoc) => {
-      if (err) {
-        throw new Error(err.toString())
-      }
-      // 删除
-    })
+  await Person.findByIdAndRemoveItem(ctx.params.id, ctx.params.itemId)
 }
