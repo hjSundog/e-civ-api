@@ -19,7 +19,9 @@ import mongoose from 'mongoose'
 
 global.logger = customizedLogger
 
-mongoose.connect(DBConfig.url)
+mongoose.connect(DBConfig.url, {
+  useMongoClient: true
+})
 mongoose.connection.on('connected', () => {
   console.log('Mongoose connection open to ' + DBConfig.url)
 })
@@ -76,9 +78,10 @@ app
           ...decoded
         }
       } catch (err) {
+        // console.log('your token verify is not valid')
       }
     }
-    console.log('authorization: ', authorization)
+    // console.log('authorization: ', authorization)
     return next()
   })
   .use(KoaBody({

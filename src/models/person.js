@@ -57,7 +57,7 @@ PersonSchema.statics.findByIdAndCreateItem = async function (data, cb) {
     owner_id: data.id,
     name: data.name,
     targetType: [''],
-    type: data.type || '',
+    type: data.type || 'other',
     status: data.status || 'active',
     result: null,
     des: data.des || '',
@@ -94,7 +94,7 @@ PersonSchema.statics.findByIdAndRemoveItem = async function (personId, itemId, c
       }
     })
   this.findById(personId)
-    .select('belongs')
+    .select('items')
     .exec((err, person) => {
       if (err) {
         console.log('findByIdAndRemoveBelong err: ' + err)

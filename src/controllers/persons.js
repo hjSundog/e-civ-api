@@ -2,11 +2,11 @@ import Person from '../models/person'
 import omit from '../lib/omit'
 
 export let GetById = async (ctx) => {
-  if (!ctx.params.name) {
-    throw new Error('no name')
+  if (!ctx.params.id) {
+    throw new Error('no person')
   }
   await Person.findOne()
-    .where('id').equals(ctx.params.id)
+    .where('_id').equals(ctx.params.id)
     .select({ name: 1, user_id: 1, _id: 0 })
     .exec((err, personDoc) => {
       if (err) {
@@ -33,7 +33,7 @@ export let Post = async (ctx) => {
   }
   var person = new Person({
     name: data.name,
-    person_id: null,
+    user_id: null,
     attributes: {
       str: 1,
       dex: 1,
@@ -168,6 +168,7 @@ export let CreateItem = async ctx => {
  * @param {*itemId} ctx 物品id
  */
 export let GetItem = async ctx => {
+  console.log(ctx.params.itemId)
   if (!ctx.params.id) {
     throw new Error('no person')
   }
@@ -181,12 +182,12 @@ export let GetItem = async ctx => {
         _id: ctx.params.itemId
       }
     })
-    .exec((err, ItemDoc) => {
+    .exec((err, person) => {
       if (err) {
         throw new Error(err.toString())
       }
       ctx.body = omit({
-        ...ItemDoc.toObject()
+        ...person.items[0].toObject()
       }, ['_id', '__v'])
     })
 }
