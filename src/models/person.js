@@ -17,7 +17,7 @@ const PersonSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ['male, female']
+    enum: ['male', 'female']
   },
   age: { // 角色年龄
     type: Number
@@ -29,6 +29,10 @@ const PersonSchema = new Schema({
     lon: {
       type: Number
     }
+  },
+  current: { // 现在的状态
+    type: String,
+    enum: ['in battle', 'moving', 'waitting', 'working']
   },
 
   items: [{
