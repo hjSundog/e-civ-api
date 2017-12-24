@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const PersonSchema = new Schema({
+  // CORE PART
   user_id: {
     type: Schema.Types.ObjectId
   },
@@ -11,26 +12,45 @@ const PersonSchema = new Schema({
     unique: true,
     require: true
   },
+  race: { // 扩展字段，暂时没用
+    type: String
+  },
+  gender: {
+    type: String,
+    enum: ['male, female']
+  },
+  age: { // 角色年龄
+    type: Number
+  },
+  position: {
+    lat: {
+      type: Number
+    },
+    lon: {
+      type: Number
+    }
+  },
+
   items: [{
     type: Schema.Types.ObjectId,
     ref: 'Item'
   }],
-  conditions: {
-    health: {
+  conditions: { // 当前状态
+    health: { // 健康
       type: Number
     },
-    maxHealth: {
+    maxHealth: { // 健康最大值
       type: Number
     },
-    stamina: {
+    stamina: { // 耐力
       type: Number
     },
-    maxStamina: {
+    maxStamina: { // 耐力最大值
       type: Number
     }
   },
   status: [],
-  attributes: {
+  attributes: { // 基本六维
     str: {
       type: Number
     },
@@ -49,6 +69,20 @@ const PersonSchema = new Schema({
     cha: {
       type: Number
     }
+  },
+  // GUILD PART
+  guilds: [ // 加入的工会ID集
+
+  ],
+  guild: { // 当前展示工会ID，参考激战2
+    type: String
+  },
+  guild_leader: [ // 领导的工会
+
+  ],
+
+  created_at: { // 人物创建时间
+    type: Date
   }
 })
 
