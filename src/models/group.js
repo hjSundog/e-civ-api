@@ -11,34 +11,13 @@ const GroupSchema = new Schema({
     type: String,
     require: true
   },
+  icon: String,
   sub_group: {
     type: [Schema.Types.ObjectId]
   },
-  rank: {
+  level: {
     type: Number
   },
-  /*     categories: {
-        leaders: {
-
-        },
-        economic: {
-
-        },
-        society: {
-
-        },
-        policy: {
-            type:
-        }
-    },
-   attributes: {
-        gold: {
-            type: Number
-        },
-        energy: {
-            type: Number
-        }
-    }, */
   totalMember: {
     type: Number
   },
@@ -49,9 +28,10 @@ const GroupSchema = new Schema({
   time: {
     type: Date
   },
-  info: {
+  description: {
     type: String
-  }
+  },
+  influence: Number
 })
 
 module.exports = mongoose.model('Group', GroupSchema)
