@@ -1,14 +1,14 @@
-import jwt from 'jsonwebtoken'
-import omit from '../lib/omit'
+const jwt = require('jsonwebtoken')
+const omit = require('../lib/omit')
 
-import User from '../models/user'
-import { authInterceptor } from '../tool/Auth'
+const User = require('../models/user')
+const authInterceptor = require('../tool/Auth')
 
-import path from 'path'
-import fs from 'fs'
+const path = require('path')
+const fs = require('fs')
 const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'))
 
-export let GetAll = async (ctx) => {
+const GetAll = async (ctx) => {
   // const _defaultOpts = {
   //   limit: 20,
   //   page: 1
@@ -36,7 +36,7 @@ export let GetAll = async (ctx) => {
     })
 }
 
-export let GetByName = async (ctx) => {
+const GetByName = async (ctx) => {
   if (!ctx.params.name) {
     throw new Error('no name')
   }
@@ -54,7 +54,7 @@ export let GetByName = async (ctx) => {
     })
 }
 
-export let Login = async (ctx) => {
+const Login = async (ctx) => {
   const data = ctx.request.body
   if (!data.username || !data.password) {
     throw new Error('no username or password')
@@ -97,7 +97,7 @@ export let Login = async (ctx) => {
   })
 }
 
-export let Signup = async (ctx) => {
+const Signup = async (ctx) => {
   let data = ctx.request.body
 
   if (!data.name || !data.username || !data.password) {
@@ -133,4 +133,11 @@ export let Signup = async (ctx) => {
   }).catch((err) => {
     console.log(err.errmsg)
   })
+}
+
+module.exports = {
+  GetAll,
+  GetByName,
+  Login,
+  Signup
 }

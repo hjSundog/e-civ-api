@@ -1,20 +1,20 @@
-import Koa2 from 'koa'
-import KoaBody from 'koa-body'
-import KoaStatic from 'koa-static2'
-import {
-  System as SystemConfig,
-  DB as DBConfig
-} from './config'
-import path from 'path'
-import routes from './routes/index'
-import ErrorRoutesCatch from './middleware/ErrorRoutesCatch'
-import ErrorRoutes from './routes/error-routes'
+const Koa2 = require('koa')
+const KoaBody = require('koa-body')
+const KoaStatic = require('koa-static2')
 
-import customizedLogger from './tool/customized-winston-logger'
+const SystemConfig = require('./config').System
+const DBConfig = require('./config').DB
 
-import jwt from 'jsonwebtoken'
-import fs from 'fs'
-import mongoose from 'mongoose'
+const path = require('path')
+const routes = require('./routes/index')
+const ErrorRoutesCatch = require('./middleware/ErrorRoutesCatch')
+const ErrorRoutes = require('./routes/error-routes')
+
+const customizedLogger = require('./tool/customized-winston-logger')
+
+const jwt = require('jsonwebtoken')
+const fs = require('fs')
+const mongoose = require('mongoose')
 // import PluginLoader from './lib/PluginLoader'
 
 global.logger = customizedLogger
@@ -107,4 +107,4 @@ process.on('uncaughtException', function (err) {
 })
 console.log('Now start API server on port ' + SystemConfig.API_server_port + '...')
 
-export default app
+module.exports = app

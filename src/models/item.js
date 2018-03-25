@@ -1,4 +1,4 @@
-import { SchemaTypes } from 'mongoose';
+const SchemaTypes = require('mongoose').SchemaTypes
 
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema

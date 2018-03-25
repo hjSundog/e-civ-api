@@ -1,4 +1,4 @@
-import Item from './item'
+const Item = require('./item')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 

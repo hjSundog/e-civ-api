@@ -1,8 +1,8 @@
-import fs from 'fs'
-import path from 'path'
-import { System as SystemConfig } from '../config'
+const fs = require('fs')
+const path = require('path')
+const SystemConfig = require('../config').System
 
-export default (ctx) => {
+module.exports = (ctx) => {
   // 设置允许跨域的域名称
   ctx.set('Access-Control-Allow-Origin', '*')
   ctx.set('Access-Control-Allow-Headers', 'X-Requested-With')

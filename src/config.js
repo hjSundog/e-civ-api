@@ -1,7 +1,7 @@
-import path from 'path'
+const path = require('path')
 
 // 系统配置
-export let System = {
+exports.System = {
   API_server_type: 'http://', // API服务器协议类型,包含"http://"或"https://"
   API_server_host: 'localhost', // API服务器暴露的域名地址,请勿添加"http://"
   API_server_port: '3000', // API服务器监听的端口号
@@ -14,11 +14,11 @@ export let System = {
   db_type: 'mongodb' // 数据库类型
 }
 
-export let DB = {
+exports.DB = {
   url: 'mongodb://localhost/e-civ'
 }
 
-export let SendEmail = {
+exports.SendEmail = {
   service: 'smtp.abcd.com', // SMTP服务提供商域名
   username: 'postmaster%40abcd.com', // 用户名/用户邮箱
   password: 'password', // 邮箱密码

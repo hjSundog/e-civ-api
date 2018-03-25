@@ -1,9 +1,9 @@
-import winston from 'winston'
+const winston = require('winston')
 
-import dateformat from 'dateformat'
-import chalk from 'chalk'
+const dateformat = require('dateformat')
+const chalk = require('chalk')
 
-export default new (winston.Logger)({
+module.exports = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({
       timestamp: function () {

@@ -1,6 +1,6 @@
-import KoaRouter from 'koa-router'
+const KoaRouter = require('koa-router')
 
-import controllers from '../controllers/index.js'
+const controllers = require('../controllers/index.js')
 
 const router = new KoaRouter()
 
@@ -9,10 +9,10 @@ router
     ctx.body = '禁止访问！'
   })
 
-  .all('/upload', controllers.upload.default)
+  // .all('/upload', controllers.upload.default)
   .get('/api/:name', controllers.api.Get)
   .post('/api/:name', controllers.api.Post)
   .put('/api/:name', controllers.api.Put)
   .del('/api/:name', controllers.api.Delect)
 
-export default router
+module.exports = router

@@ -1,9 +1,9 @@
-import KoaRouter from 'koa-router'
-import controllers from '../controllers/index.js'
+const KoaRouter = require('koa-router')
+const controllers = require('../controllers/index.js')
 const router = new KoaRouter({ prefix: '/letters' })
 
 router
   .get('/', controllers.letters.GetByOwn)
   .post('/', controllers.letters.Post)
 
-export default router
+module.exports = router

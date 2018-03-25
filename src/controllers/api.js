@@ -1,4 +1,4 @@
-export let Get = (ctx) => {
+const Get = (ctx) => {
   ctx.body = {
     result: 'get',
     name: ctx.params.name,
@@ -6,7 +6,7 @@ export let Get = (ctx) => {
   }
 }
 
-export let Post = async (ctx) => {
+const Post = async (ctx) => {
   ctx.body = {
     result: 'post',
     name: ctx.params.name,
@@ -14,7 +14,7 @@ export let Post = async (ctx) => {
   }
 }
 
-export let Put = (ctx) => {
+const Put = (ctx) => {
   ctx.body = {
     result: 'put',
     name: ctx.params.name,
@@ -22,10 +22,17 @@ export let Put = (ctx) => {
   }
 }
 
-export let Delect = (ctx) => {
+const Delect = (ctx) => {
   ctx.body = {
     result: 'delect',
     name: ctx.params.name,
     para: ctx.request.body
   }
+}
+
+module.exports = {
+  Get,
+  Post,
+  Put,
+  Delect
 }

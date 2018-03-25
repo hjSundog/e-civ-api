@@ -1,7 +1,7 @@
 /** 身份认证拦截器，放在controller前面，默认拦截器为需要token
  * @param  {} interceptor
  */
-export let authInterceptor = (ctx, interceptor = {}) => {
+exports.authInterceptor = (ctx, interceptor = {}) => {
   const _defaultInterceptor = {
     validator: (ctx) => {
       if (ctx.header.authorization.decoded) {

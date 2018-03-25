@@ -1,7 +1,7 @@
-import omit from '../lib/omit'
-import Letter from '../models/letter'
+const omit = require('../lib/omit')
+const Letter = require('../models/letter')
 
-export let GetByOwn = async (ctx) => {
+const GetByOwn = async (ctx) => {
   // 验证jwt，解析userID或者其他
 
   await Letter.find()
@@ -20,7 +20,7 @@ export let GetByOwn = async (ctx) => {
     })
 }
 
-export let Post = async (ctx) => {
+const Post = async (ctx) => {
   const data = ctx.request.body
   // TODO: 补全userid部分
   var letter = new Letter({
@@ -42,4 +42,9 @@ export let Post = async (ctx) => {
   }).catch((err) => {
     console.log(err.errmsg)
   })
+}
+
+module.exports = {
+  GetByOwn,
+  Post
 }

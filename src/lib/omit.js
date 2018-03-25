@@ -1,8 +1,8 @@
 'use strict'
 
-import isObject from './isObject'
+const isObject = require('./isObject')
 
-export default function omit (obj, props, fn) {
+module.exports = function omit (obj, props, fn) {
   if (!isObject(obj)) return {}
 
   if (typeof props === 'function') {

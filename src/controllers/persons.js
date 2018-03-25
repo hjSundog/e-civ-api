@@ -1,7 +1,7 @@
-import Person from '../models/person'
-import omit from '../lib/omit'
+const Person = require('../models/person')
+const omit = require('../lib/omit')
 
-export let GetById = async (ctx) => {
+const GetById = async (ctx) => {
   if (!ctx.params.id) {
     throw new Error('no person')
   }
@@ -18,7 +18,7 @@ export let GetById = async (ctx) => {
     })
 }
 
-export let Post = async (ctx) => {
+const Post = async (ctx) => {
   let data
   try {
     if (typeof ctx.request.body === 'object') {
@@ -69,7 +69,7 @@ export let Post = async (ctx) => {
  * 获取用户所有物品
  * @param {*id} ctx 用户id
  */
-export let GetAllItems = async (ctx) => {
+const GetAllItems = async (ctx) => {
   if (!ctx.params.id) {
     throw new Error('no person id')
   }
@@ -115,7 +115,7 @@ export let GetAllItems = async (ctx) => {
  * @param {*id} ctx 用户id
  * @param {*type} ctx 物品类型
  */
-export let GetItemsOf = async (ctx) => {
+const GetItemsOf = async (ctx) => {
   if (!ctx.params.id) {
     throw new Error('no person')
   }
@@ -142,7 +142,7 @@ export let GetItemsOf = async (ctx) => {
  * 用户创建对象
  * @param {*id} ctx 用户id
  */
-export let CreateItem = async ctx => {
+const CreateItem = async ctx => {
   let data
   try {
     if (typeof ctx.request.body === 'object') {
@@ -167,7 +167,7 @@ export let CreateItem = async ctx => {
  * @param {*id} ctx 用户id
  * @param {*itemId} ctx 物品id
  */
-export let GetItem = async ctx => {
+const GetItem = async ctx => {
   console.log(ctx.params.itemId)
   if (!ctx.params.id) {
     throw new Error('no person')
@@ -196,7 +196,7 @@ export let GetItem = async ctx => {
  * @param {*id} ctx 用户id
  * @param {*itemId} ctx 物品id
  */
-export let UseItem = async ctx => {
+const UseItem = async ctx => {
   let data
   try {
     if (typeof ctx.request.body === 'object') {
@@ -216,4 +216,14 @@ export let UseItem = async ctx => {
     throw new Error('no Item')
   }
   await Person.findByIdAndRemoveItem(ctx.params.id, ctx.params.itemId)
+}
+
+module.exports = {
+  GetById,
+  Post,
+  GetAllItems,
+  GetItemsOf,
+  CreateItem,
+  GetItem,
+  UseItem
 }
