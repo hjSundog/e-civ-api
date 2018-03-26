@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+
 const bcrypt = require('bcrypt')
 
 const UserSchema = new Schema({
@@ -18,7 +19,7 @@ const UserSchema = new Schema({
     required: true
   },
   person_id: {
-    type: [Schema.Types.ObjectId]
+    type: String
   },
   meta: {
     age: {
@@ -28,6 +29,14 @@ const UserSchema = new Schema({
       type: String,
       enum: ['male', 'female']
     }
+  }
+})
+
+UserSchema.set('toObject', {
+  transform: function (doc, ret, options) {
+    ret.id = ret._id
+    delete ret._id
+    delete ret.__v
   }
 })
 

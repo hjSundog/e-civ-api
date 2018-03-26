@@ -2,11 +2,15 @@ const jwt = require('jsonwebtoken')
 const omit = require('../lib/omit')
 
 const User = require('../models/user')
-const authInterceptor = require('../tool/Auth')
+const authInterceptor = require('../tool/Auth').authInterceptor
 
 const path = require('path')
 const fs = require('fs')
 const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'))
+
+const handleError = (err) => {
+  console.log(err)
+}
 
 const GetAll = async (ctx) => {
   // const _defaultOpts = {
@@ -29,24 +33,35 @@ const GetAll = async (ctx) => {
         throw new Error(err.toString())
       }
       ctx.body = [
-        ...userDocs.map(user => {
-          return user.toObject()
+        ...userDocs.map(userDoc => {
+          return {
+            ...userDoc.toObject()
+          }
         })
       ]
     })
 }
 
-const GetByName = async (ctx) => {
-  if (!ctx.params.name) {
-    throw new Error('no name')
+const GetById = async (ctx) => {
+  if (!ctx.params.id) {
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
+    }
+    return
   }
   await User.findOne()
-    .where('name').equals(ctx.params.name)
-    .select({ name: 1, person_id: 1, meta: 1, _id: 0 })
+    .where('_id').equals(ctx.params.id)
+    .select({ name: 1, person_id: 1, meta: 1 })
     .exec((err, userDoc) => {
-      console.log('userDoc' + userDoc)
-      if (err || !userDoc) {
-        throw new Error(err.toString())
+      if (err) handleError(err)
+
+      if (!userDoc) {
+        ctx.response.status = 404
+        ctx.body = {
+          err: 'Not Found'
+        }
+        return
       }
       ctx.body = {
         ...userDoc.toObject()
@@ -137,7 +152,7 @@ const Signup = async (ctx) => {
 
 module.exports = {
   GetAll,
-  GetByName,
+  GetById,
   Login,
   Signup
 }

@@ -2,10 +2,13 @@ const Item = require('./item')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+// pre remove
+const UserSchema = require('./user')
+
 const PersonSchema = new Schema({
   // CORE PART
   user_id: {
-    type: Schema.Types.ObjectId
+    type: String
   },
   name: {
     type: String,
@@ -74,20 +77,35 @@ const PersonSchema = new Schema({
       type: Number
     }
   },
-  // GUILD PART
-  guilds: [ // 加入的工会ID集
+  // // GUILD PART
+  // guilds: [ // 加入的工会ID集
 
-  ],
-  guild: { // 当前展示工会ID，参考激战2
-    type: String
-  },
-  guild_leader: [ // 领导的工会
+  // ],
+  // guild: { // 当前展示工会ID，参考激战2
+  //   type: String
+  // },
+  // guild_leader: [ // 领导的工会
 
-  ],
+  // ],
 
   created_at: { // 人物创建时间
     type: Date
   }
+}, {
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+})
+
+PersonSchema.set('toObject', {
+  transform: function (doc, ret, options) {
+    ret.id = ret._id
+    delete ret._id
+    delete ret.__v
+  }
+})
+
+PersonSchema.pre('remove', function (next) {
+  UserSchema.findOneAndUpdate({person_id: this._id}, {person_id: null}).exec()
+  next()
 })
 
 PersonSchema.statics.findByIdAndCreateItem = async function (data, cb) {

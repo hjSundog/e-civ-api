@@ -7,6 +7,12 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Node调试",
+      "program": "${workspaceFolder}/src/app.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "nodemon",
       "runtimeExecutable": "nodemon",
       "program": "${workspaceFolder}/build/dev-server.js",

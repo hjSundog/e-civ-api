@@ -4,7 +4,7 @@ const router = new KoaRouter({ prefix: '/users' })
 
 router
   .get('/', controllers.users.GetAll)
-  .get('/:name', controllers.users.GetByName)
+  .get('/:id', controllers.users.GetById)
   .post('/', controllers.users.Signup)
   .post('/login', controllers.users.Login)
 
