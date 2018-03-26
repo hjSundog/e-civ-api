@@ -10,15 +10,16 @@ const LetterSchema = new Schema({
     type: String,
     required: true
   },
-  create_time: {
-    type: Date
+  from_user_id: {
+    type: String,
+    required: true
   },
-  from_userid: {
-    type: [Schema.Types.ObjectId]
-  },
-  to_userid: {
-    type: [Schema.Types.ObjectId]
+  to_user_id: {
+    type: String,
+    required: true
   }
+}, {
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
 
 LetterSchema.set('toObject', {
@@ -26,16 +27,6 @@ LetterSchema.set('toObject', {
     ret.id = ret._id
     delete ret._id
     delete ret.__v
-  }
-})
-
-LetterSchema.pre('save', function (next) {
-  var letter = this
-  if (this.isModified('create_time') || this.isNew) {
-    letter.create_time = Date
-    next()
-  } else {
-    return next()
   }
 })
 
