@@ -13,15 +13,6 @@ const handleError = (err) => {
 }
 
 const GetAll = async (ctx) => {
-  // const _defaultOpts = {
-  //   limit: 20,
-  //   page: 1
-  // }
-  // let opts = {
-  //   ..._defaultOpts,
-  //   ctx.params
-  // }
-
   // 身份认证拦截器
   if (!authInterceptor(ctx)) {
     return
