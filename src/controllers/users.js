@@ -73,6 +73,12 @@ const Login = async (ctx) => {
       }
       return userDoc
     })
+  if (!userDoc) {
+    ctx.body = {
+      err: 'user not found'
+    }
+    ctx.response.status = 404
+  }
   await userDoc.comparePassword(data.password, (err, isMatch) => {
     // 去除内部字段和密码的用户信息
     const openInfo = omit({
