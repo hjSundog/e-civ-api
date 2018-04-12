@@ -4,6 +4,7 @@ const userRoutes = require('./user-routes')
 const letterRoutes = require('./letter-routes')
 const personRoutes = require('./person-routes')
 const belongingRoutes = require('./belonging-routes')
+const gameRoutes = require('./game-routes')
 
 const router = compose([
   mainRoutes.routes(),
@@ -15,7 +16,9 @@ const router = compose([
   belongingRoutes.routes(),
   belongingRoutes.allowedMethods(),
   personRoutes.routes(),
-  personRoutes.allowedMethods()
+  personRoutes.allowedMethods(),
+  gameRoutes.routes(),
+  gameRoutes.allowedMethods()
 ])
 
 module.exports = router
