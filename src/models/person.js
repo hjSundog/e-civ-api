@@ -10,7 +10,7 @@ const PersonSchema = new Schema({
   user_id: {
     type: String
   },
-  name: {
+  nickname: {
     type: String,
     unique: true,
     require: true
@@ -77,6 +77,7 @@ const PersonSchema = new Schema({
       type: Number
     }
   },
+  description: String,
   // // GUILD PART
   // guilds: [ // 加入的工会ID集
 

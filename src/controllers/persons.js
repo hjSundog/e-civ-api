@@ -64,12 +64,12 @@ const Post = async (ctx) => {
 
   // 查询是否有同名person
   const sameNamePerson = await Person.findOne()
-    .where('name').equals(data.name)
+    .where('nickname').equals(data.nickname)
     .exec((err, personDoc) => {
       if (err) handleError(err)
       if (personDoc && personDoc.id) {
         ctx.body = {
-          err: 'Duplicate name for character'
+          err: 'Duplicate nickname for character'
         }
         ctx.response.status = 400
       }
@@ -79,7 +79,7 @@ const Post = async (ctx) => {
   }
 
   var person = new Person({
-    name: data.name,
+    name: data.nickname,
     user_id: userDoc.id,
     attributes: {
       str: 1,
@@ -97,10 +97,10 @@ const Post = async (ctx) => {
       maxStamina: 120
     },
     status: [],
-    meta: {
-      age: 18,
-      sex: data.meta.sex || 'female'
-    }
+    race: data.race,
+    age: data.age,
+    gender: data.gender || 'female',
+    description: data.description
   })
   // 这两个请求分开会不会有可能导致数据的不一致
   await person.save(function (err, person) {
