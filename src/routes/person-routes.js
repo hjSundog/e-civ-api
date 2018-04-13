@@ -11,5 +11,5 @@ router
   .get('/:id/items/type/:type', controllers.persons.GetItemsOf)
   .get('/:id/items/:itemId', controllers.persons.GetItem)
   .delete('/:id/items/:itemId', controllers.persons.UseItem)
-
+  .post('/avatar', controllers.persons.Avatar)
 module.exports = router

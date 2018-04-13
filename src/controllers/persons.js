@@ -79,8 +79,9 @@ const Post = async (ctx) => {
   }
 
   var person = new Person({
-    name: data.nickname,
+    nickname: data.nickname,
     user_id: userDoc.id,
+    avatar: data.avatar,
     attributes: {
       str: 1,
       dex: 1,
@@ -310,6 +311,11 @@ const UseItem = async ctx => {
   await Person.findByIdAndRemoveItem(ctx.params.id, ctx.params.itemId)
 }
 
+const Avatar = async ctx => {
+  let data = ctx.request.body
+  console.log(data)
+}
+
 module.exports = {
   GetById,
   Post,
@@ -318,5 +324,6 @@ module.exports = {
   GetItemsOf,
   CreateItem,
   GetItem,
-  UseItem
+  UseItem,
+  Avatar
 }

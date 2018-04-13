@@ -18,6 +18,9 @@ const PersonSchema = new Schema({
   race: { // 扩展字段，暂时没用
     type: String
   },
+  avatar: {
+    type: String
+  },
   gender: {
     type: String,
     enum: ['male', 'female']
