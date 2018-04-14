@@ -90,7 +90,7 @@ const Post = async (ctx) => {
       wis: 1,
       cha: 1
     },
-    belogings: [],
+    items: [],
     conditions: {
       health: 100,
       maxHealth: 100,
