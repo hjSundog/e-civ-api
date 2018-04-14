@@ -9,6 +9,7 @@ const path = require('path')
 const routes = require('./routes/index')
 const ErrorRoutesCatch = require('./middleware/ErrorRoutesCatch')
 const ErrorRoutes = require('./routes/error-routes')
+const CORS = require('./middleware/CORS')
 
 const customizedLogger = require('./tool/customized-winston-logger')
 
@@ -49,9 +50,9 @@ app
     // } else {
     //   ctx.set('Access-Control-Allow-Origin', SystemConfig.HTTP_server_host)
     // }
-    // ctx.set('Access-Control-Allow-Origin', '*')
-    // ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-    // ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+    ctx.set('Access-Control-Allow-Origin', '*')
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Access-Token')
+    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
     ctx.set('Access-Control-Allow-Credentials', true) // 允许带上 cookie
     return next()
   })
