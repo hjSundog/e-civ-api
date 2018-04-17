@@ -7,4 +7,5 @@ router
   .get('/:id', controllers.users.GetById)
   .post('/', controllers.users.Signup)
   .post('/login', controllers.users.Login)
+  .post('/:id/persons', controllers.users.CreatePerson)
 module.exports = router

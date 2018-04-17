@@ -1,6 +1,7 @@
 const Item = require('./item')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const omit = require('../lib/omit')
 
 // pre remove
 const UserSchema = require('./user')
@@ -96,8 +97,8 @@ const PersonSchema = new Schema({
     type: Date
   }
 }, {
-  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
-})
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+  })
 
 PersonSchema.set('toObject', {
   transform: function (doc, ret, options) {
@@ -108,71 +109,129 @@ PersonSchema.set('toObject', {
 })
 
 PersonSchema.pre('remove', function (next) {
-  UserSchema.findOneAndUpdate({person_id: this._id}, {person_id: null}).exec()
+  UserSchema.findOneAndUpdate({ person_id: this._id }, { person_id: null }).exec()
   next()
 })
 
-PersonSchema.statics.findByIdAndCreateItem = async function (data, cb) {
-  new Item({
-    owner_id: data.id,
-    name: data.name,
-    targetType: [''],
-    type: data.type || 'other',
-    status: data.status || 'active',
-    result: null,
-    des: data.des || '',
-    needs: data.needs
-  }).save((err, item) => {
-    if (err) {
-      console.log('findByIdAndCreateBelong error:' + err)
-      throw new Error(err)
-    }
-    this.findById(data.id)
-      .exec((err, person) => {
-        if (err) {
-          throw new Error(err)
-        }
-        person.items.push(item._id)
-        person.save((err, person) => {
-          if (err) {
-            console.log('person create item update failed!')
-            throw new Error(err)
-          }
-          console.log('peson create item successful!')
-          typeof cb === 'function' && cb()
-        })
-      })
+PersonSchema.statics.getItems = async function (id) {
+  const rt = await this.findById(id)
+    .populate({
+      path: 'items'
+    })
+    .exec((err, person) => {
+      if (err) {
+        throw new Error(err)
+      }
+    })
+  return rt.items.map(ele => {
+    return omit(ele.toObject(), ['_id', '__v'])
   })
 }
 
-PersonSchema.statics.findByIdAndRemoveItem = async function (personId, itemId, cb) {
-  Item.findByIdAndRemove(itemId)
-    .exec((err, belong) => {
-      if (err) {
-        console.log('findByIdAndRemoveBelong err: ' + err)
-        throw new Error(err)
-      }
-    })
-  this.findById(personId)
-    .select('items')
+PersonSchema.statics.findByIdAndCreateItem = async function ({ id, type, count }, cb) {
+  const tpl = Item.getTpl(type)
+  if (!tpl) {
+    throw new Error('can\'t get tpl of ' + type)
+  }
+  const item = await new Item({
+    owner_id: id,
+    ...tpl,
+    count: count
+
+  }).save((err, item) => {
+    if (err) {
+      throw new Error(err)
+    }
+  })
+  // 添加索引
+  const person = await this.findById(id)
     .exec((err, person) => {
       if (err) {
-        console.log('findByIdAndRemoveBelong err: ' + err)
         throw new Error(err)
       }
-      let index = person.items.findIndex((cur, index) => {
-        return cur._id === itemId
-      })
+    })
+  person.items.push(item._id)
+  await person.save((err, person) => {
+    if (err) {
+      throw new Error(err)
+    }
+  })
+  // 获取所有对象
+  return this.getItems(id)
+}
 
-      person.items.splice(index, 1)
-      person.save((err, person) => {
-        if (err) {
-          throw new Error(err)
-        }
-        console.log('use belong successful!')
-        typeof cb === 'function' && cb()
+PersonSchema.statics.findByIdAndRemoveItem = async function (personId, itemId, count, cb) {
+  // 如果有多个，则减少指定个，如果不够返回不够，如果用完，删除
+  count = +count
+  let rt, index, item
+  const person = await this.findById(personId)
+    .populate({
+      path: 'items'
+    })
+    .exec((err, person) => {
+      if (err) {
+        throw new Error(err)
+      }
+    })
+
+  // 索引
+  index = person.items.findIndex(ele => {
+    return ele.id === itemId
+  })
+  // 物品
+  item = person.items[index]
+  if (!item) {
+    rt = {
+      err: 'the target is not exsist'
+    }
+    return
+  }
+  if (item.count > count) {
+    item.count -= count
+    await item.save((err, itemDoc) => {
+      if (err) {
+        throw new Error(err)
+      }
+      // 获取该人物物品
+      rt = person.items.map(ele => {
+        return omit(ele.toObject(), ['_id', '__v'])
       })
     })
+  } else if (item.count === count) {
+    // 删除
+    // 删除person索引
+    person.items.splice(index, 1)
+    await new Promise((resolve, reject) => {
+      // 删除索引
+      person.save((err, person) => {
+        if (err) {
+          reject(err)
+        }
+        rt = person.items.map(ele => {
+          return omit(ele.toObject(), ['_id', '__v'])
+        })
+        resolve(rt)
+      })
+    }).then((data) => {
+      // 删除对象
+      Item.findByIdAndRemove(itemId)
+        .exec((err, itemDoc) => {
+          if (err) {
+            throw new Error(err)
+          }
+        })
+    }).catch(err => {
+      throw new Error(err)
+    })
+  } else {
+    rt = {
+      err: 'The max count you can use is ' + item.count + '，please check the count you want to use'
+    }
+    if (typeof cb === 'function') {
+      cb(rt, null)
+    }
+  }
+  return rt
 }
 
 module.exports = mongoose.model('Person', PersonSchema)

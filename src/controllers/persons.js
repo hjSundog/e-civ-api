@@ -1,6 +1,6 @@
 const Person = require('../models/person')
 const User = require('../models/user')
-
+const Item = require('../models/item')
 const omit = require('../lib/omit')
 
 const authInterceptor = require('../tool/Auth').authInterceptor
@@ -33,6 +33,57 @@ const GetById = async (ctx) => {
         ...personDoc.toObject()
       }
     })
+}
+
+const UpdatePerson = async (ctx) => {
+  if (!authInterceptor(ctx)) {
+    return
+  }
+  if (!ctx.params.id) {
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
+    }
+    return
+  }
+  let data // 请求数据
+  try {
+    data = ctx.request.body
+  } catch (e) {
+    return
+  }
+  const person = await Person.findById(ctx.params.id)
+    .exec((err, person) => {
+      if (err) {
+        handleError(err)
+        throw new Error(err)
+      }
+      Object.keys(data).forEach(key => {
+        // 是否顶级
+        if (person[key]) {
+          person[key] = data[key]
+        }
+
+        if (person['conditions'][key]) {
+          person['conditions'][key] += data[key]
+        }
+
+        if (person['attributes'][key]) {
+          person['attributes'][key] += data[key]
+        }
+      })
+    })
+
+  await person.save((err, personDoc) => {
+    if (err) {
+      handleError(err)
+      throw new Error(err)
+    }
+  })
+
+  ctx.body = omit({
+    ...person.toObject()
+  }, ['_id', '__v', 'avatar'])
 }
 
 const Post = async (ctx) => {
@@ -158,7 +209,11 @@ const GetAllItems = async (ctx) => {
     return
   }
   if (!ctx.params.id) {
-    throw new Error('no person id')
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
+    }
+    return
   }
   await Person.findById(ctx.params.id)
     .populate('items')
@@ -171,10 +226,8 @@ const GetAllItems = async (ctx) => {
           ...Item.toObject()
         }, ['_id', '__v'])
       })
-      console.log(rt)
-      ctx.body = {
-        rt
-      }
+      // console.log(rt)
+      ctx.body = rt
       // let tasks = ItemsDoc.Items.map(beloging => {
       //   return new Promise((resolve, reject) => {
       //     Iteming.findById(beloging)
@@ -198,19 +251,23 @@ const GetAllItems = async (ctx) => {
     })
 }
 /**
- * 获取某个用户的某种类型的物品
+ * 获取某个用户的某种类型的物品, 这里没啥必要
  * @param {*id} ctx 用户id
  * @param {*type} ctx 物品类型
  */
 const GetItemsOf = async (ctx) => {
   if (!ctx.params.id) {
-    throw new Error('no person')
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
+    }
+    return
   }
   await Person.findOne()
     .where('_id').equals(ctx.params.id)
     .populate({
       path: 'items',
-      match: {type: ctx.params.type}
+      match: { type: ctx.search.type }
     })
     .exec((err, ItemsDoc) => {
       if (err) {
@@ -235,22 +292,62 @@ const CreateItem = async ctx => {
   }
   let data
   try {
-    if (typeof ctx.request.body === 'object') {
-      data = ctx.request.body
-    } else {
-      data = JSON.parse(ctx.request.body)
-    }
-    console.log(data)
+    data = ctx.request.body
   } catch (e) {
-    console.error(e)
-    return
+    throw new Error('api request error')
   }
   if (!ctx.params.id) {
-    throw new Error('no person')
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
+    }
+    return
   }
-  data = {id: ctx.params.id, ...data}
+  // 判断约束
+  // 是否是一个一组
+  const tpl = Item.getTpl(data.type)
+  if (!tpl) {
+    ctx.response.status = 422
+    ctx.body = {
+      err: data.type + ' is not the item of our website,please check the spell of it'
+    }
+    return
+  }
+  let mustCreate = tpl.restrictions.includes('NotGroup')
+  let targetItem
+  // 查找是否存在该类型元素
+  await Person.findById(ctx.params.id)
+    .populate('items')
+    .exec((err, ItemsDoc) => {
+      if (err) {
+        throw new Error(err.toString())
+      }
+      let rt = ItemsDoc.items.some(Item => {
+        if (Item.toObject().name === data.type) {
+          targetItem = Item
+          return true
+        }
+        return false
+      })
+      // console.log(rt)
+      mustCreate = rt ? mustCreate : true
+    })
 
-  await Person.findByIdAndCreateItem(data)
+  if (!mustCreate) {
+    // 如果没有强制新建一个对象，则在原来的基础上增加
+    targetItem.count += data.count
+    await targetItem.save((err, item) => {
+      if (err) {
+        throw new Error(err)
+      }
+    })
+    const rt = await Person.getItems(ctx.params.id)
+    ctx.body = rt
+    return
+  }
+  data = { id: ctx.params.id, ...data }
+  const rt = await Person.findByIdAndCreateItem(data)
+  ctx.body = rt
 }
 /**
  * 获取用户某个物品
@@ -258,12 +355,13 @@ const CreateItem = async ctx => {
  * @param {*itemId} ctx 物品id
  */
 const GetItem = async ctx => {
-  console.log(ctx.params.itemId)
-  if (!ctx.params.id) {
-    throw new Error('no person')
-  }
-  if (!ctx.params.itemId) {
-    throw new Error('no Item')
+  // console.log(ctx.params.itemId)
+  if (!ctx.params.id || !ctx.params.itemId) {
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
+    }
+    return
   }
   await Person.findById(ctx.params.id)
     .populate({
@@ -290,40 +388,30 @@ const UseItem = async ctx => {
   if (!authInterceptor(ctx)) {
     return
   }
-  let data
-  try {
-    if (typeof ctx.request.body === 'object') {
-      data = ctx.request.body
-    } else {
-      data = JSON.parse(ctx.request.body)
+  if (!ctx.params.id || !ctx.params.itemId) {
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
     }
-    console.log(data)
-  } catch (e) {
-    console.error(e)
     return
   }
-  if (!ctx.params.id) {
-    throw new Error('no person')
-  }
-  if (!ctx.params.itemId) {
-    throw new Error('no Item')
-  }
-  await Person.findByIdAndRemoveItem(ctx.params.id, ctx.params.itemId)
-}
 
-const Avatar = async ctx => {
-  let data = ctx.request.body
-  console.log(data)
+  const data = await Person.findByIdAndRemoveItem(ctx.params.id, ctx.params.itemId, ctx.query.count || 1, (data, err) => {
+    if (err) {
+      throw new Error(err)
+    }
+  })
+  ctx.body = data
 }
 
 module.exports = {
   GetById,
+  UpdatePerson,
   Post,
   Delete,
   GetAllItems,
   GetItemsOf,
   CreateItem,
   GetItem,
-  UseItem,
-  Avatar
+  UseItem
 }

@@ -51,7 +51,7 @@ app
     }
     ctx.set('Access-Control-Allow-Origin', '*')
     ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, access-token')
-    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS, PATCH')
     ctx.set('Access-Control-Allow-Credentials', true) // 允许带上 cookie
     return next()
   })
