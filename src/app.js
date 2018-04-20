@@ -79,19 +79,21 @@ app
           ...decoded
         }
       } catch (err) {
+        // 验证失败
         // console.log('your token verify is not valid')
       }
     }
-    // console.log('authorization: ', authorization)
+    console.log('authorization: ', authorization)
     return next()
   })
   .use(KoaBody({
     multipart: true,
     strict: false,
     formidable: {
-      uploadDir: path.join(__dirname, '../assets/uploads/tmp')
+      uploadDir: path.join(__dirname, '../assets/uploads/tmp'),
+      maxFileSize: 100 * 1024 * 1024
     },
-    jsonLimit: '10mb',
+    jsonLimit: '100mb',
     formLimit: '10mb',
     textLimit: '10mb'
   })) // Processing request
