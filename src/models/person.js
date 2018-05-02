@@ -77,7 +77,7 @@ const PersonSchema = new Schema({
       type: Number
     }
   },
-  description: String,
+  description: String
   // // GUILD PART
   // guilds: [ // 加入的工会ID集
 
@@ -88,10 +88,6 @@ const PersonSchema = new Schema({
   // guild_leader: [ // 领导的工会
 
   // ],
-
-  created_at: { // 人物创建时间
-    type: Date
-  }
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })

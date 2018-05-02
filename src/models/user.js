@@ -14,14 +14,14 @@ const UserSchema = new Schema({
     unique: true,
     required: true
   },
-  password: {
+  password: { // 密码
     type: String,
     required: true
   },
-  person_id: {
+  person_id: { // 用户唯一角色的id
     type: String
   },
-  meta: {
+  meta: { // meta信息
     age: {
       type: Number
     },
