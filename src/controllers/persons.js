@@ -29,9 +29,9 @@ const GetById = async (ctx) => {
         }
         return
       }
-      ctx.body = {
+      ctx.body = omit({
         ...personDoc.toObject()
-      }
+      }, ['_id', '__v'])
     })
 }
 

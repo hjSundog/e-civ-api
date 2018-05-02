@@ -55,9 +55,8 @@ async function generateVideo (target, dest, timeStamp, params) {
       nolog: true
     })
       .videoBitrate(1024)
-      .format('mp4')
       .withFps(25)
-      .saveToFile(pathResolve(dest + '/game' + timeStamp + '.mp4'), (retcode, err) => {
+      .saveToFile(pathResolve(dest + '/game' + timeStamp + '.mpeg'), (retcode, err) => {
         if (err) {
           console.log(err)
         }
@@ -65,7 +64,7 @@ async function generateVideo (target, dest, timeStamp, params) {
       .on('end', function () {
         rt = {
           url: `games/${user}&&${enemy}/${timeStamp}`,
-          filename: 'game' + timeStamp + '.mp4'
+          filename: 'game' + timeStamp + '.mpeg'
         }
         resolve()
       })
@@ -116,14 +115,11 @@ const GetGame = async ctx => {
   }
 
   const {timeStamp, folder} = ctx.params
-  const fileName = path.join(VideoUrl, folder, '/game' + timeStamp + '.mp4')
+  const fileName = path.join(VideoUrl, folder, '/game' + timeStamp + '.mpeg')
   ctx.attachment(fileName)
   await send(ctx, fileName, {
     root: pathResolve('')
   })
-  // res.contentType('mp4');
-  // var rstream = fs.createReadStream(fileName)
-  // rstream.pipe(res, {end: true});
 }
 
 const PlayGame = async ctx => {
@@ -135,7 +131,8 @@ const PlayGame = async ctx => {
     return
   }
   const {file, folder} = ctx.params
-  ctx.type = 'video/mp4'
+  // ctx.type = 'video/mp4'
+  ctx.type = 'mpeg'
   const fileName = pathResolve(path.join(VideoUrl, folder, file))
   const rs = fs.createReadStream(fileName)
   rs.pipe(ctx.body)
@@ -146,6 +143,9 @@ const PlayGame = async ctx => {
       }
       console.log('end pipe')
     })
+  // res.contentType('mpeg');
+  // var rstream = fs.createReadStream(fileName)
+  // rstream.pipe(res, {end: true});
 }
 
 module.exports = {

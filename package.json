@@ -10,7 +10,8 @@
     "start": "gulp nodemon",
     "dev": "gulp",
     "build": "babel src -d dist",
-    "production": "node dist/app.js"
+    "production": "node dist/app.js",
+    "test": "mocha --inspect -t 4000 -w  src/test/**/*.test.js"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
@@ -39,6 +40,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "babel-register": "^6.26.0",
     "babel-watch": "^2.0.7",
+    "chai": "^4.1.2",
     "eslint": "^4.9.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",
@@ -50,7 +52,9 @@
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.0",
     "gulp-nodemon": "^2.2.1",
-    "koa-logger": "^3.1.0"
+    "koa-logger": "^3.1.0",
+    "mocha": "^5.1.1",
+    "supertest": "^3.0.0"
   },
   "engines": {
     "node": ">= 7.8.0",
