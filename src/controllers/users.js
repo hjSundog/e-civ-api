@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const omit = require('../lib/omit')
-
+const Person = require('../models/person')
 const User = require('../models/user')
 const authInterceptor = require('../tool/Auth').authInterceptor
 
@@ -78,6 +78,7 @@ const Login = async (ctx) => {
       err: 'user not found'
     }
     ctx.response.status = 404
+    return
   }
   await userDoc.comparePassword(data.password, (err, isMatch) => {
     // 去除内部字段和密码的用户信息
@@ -147,9 +148,116 @@ const Signup = async (ctx) => {
   })
 }
 
+const CreatePerson = async (ctx) => {
+  if (!authInterceptor(ctx)) {
+    return
+  }
+
+  let data // 请求数据
+  try {
+    data = ctx.request.body
+  } catch (e) {
+    return
+  }
+
+  if (!ctx.params.id) {
+    ctx.response.status = 422
+    ctx.body = {
+      err: 'No Query Param'
+    }
+    return
+  }
+  const userDoc = await User.findOne()
+    .where('_id').equals(ctx.params.id)
+    .select({ name: 1, person_id: 1, meta: 1 })
+    .exec((err, userDoc) => {
+      if (err) handleError(err)
+
+      if (!userDoc) {
+        ctx.response.status = 404
+        ctx.body = {
+          err: 'User Not Found'
+        }
+        return
+      }
+      ctx.body = {
+        ...userDoc.toObject()
+      }
+    })
+  // 没有用户
+  if (!userDoc) {
+    return
+  }
+
+  // 查询用户是否已经有person
+  if (userDoc.person_id) {
+    ctx.body = {
+      err: 'The user has already have a game character'
+    }
+    ctx.response.status = 400
+    return
+  }
+
+  // 查询是否有同名person
+  const sameNamePerson = await Person.findOne()
+    .where('nickname').equals(data.nickname)
+    .exec((err, personDoc) => {
+      if (err) handleError(err)
+      if (personDoc && personDoc.id) {
+        ctx.body = {
+          err: 'Duplicate nickname for character'
+        }
+        ctx.response.status = 400
+      }
+    })
+  if (sameNamePerson) {
+    return
+  }
+
+  var person = new Person({
+    nickname: data.nickname,
+    user_id: userDoc.id,
+    avatar: data.avatar,
+    attributes: {
+      str: 1,
+      dex: 1,
+      con: 1,
+      int: 1,
+      wis: 1,
+      cha: 1
+    },
+    items: [],
+    conditions: {
+      health: 100,
+      maxHealth: 100,
+      stamina: 120,
+      maxStamina: 120
+    },
+    status: [],
+    race: data.race,
+    age: data.age,
+    gender: data.gender || 'female',
+    description: data.description
+  })
+  // 这两个请求分开会不会有可能导致数据的不一致
+  await person.save(function (err, person) {
+    if (err) handleError(err)
+
+    ctx.body = omit({
+      ...person.toObject()
+    }, ['_id', '__v'])
+  })
+  // 更新user的person_id
+  userDoc.person_id = person.id
+  await userDoc.save(function (err, updatedUser) {
+    if (err) handleError(err)
+  })
+}
+
 module.exports = {
   GetAll,
   GetById,
   Login,
-  Signup
+  Signup,
+  CreatePerson
 }

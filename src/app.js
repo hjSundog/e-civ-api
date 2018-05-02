@@ -45,14 +45,14 @@ if (env === 'development') { // logger
 
 app
   .use((ctx, next) => {
-    // if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
-    //   ctx.set('Access-Control-Allow-Origin', '*')
-    // } else {
-    //   ctx.set('Access-Control-Allow-Origin', SystemConfig.HTTP_server_host)
-    // }
+    if (ctx.request.header.host.split(':')[0] === 'localhost' || ctx.request.header.host.split(':')[0] === '127.0.0.1') {
+      ctx.set('Access-Control-Allow-Origin', '*')
+    } else {
+      ctx.set('Access-Control-Allow-Origin', SystemConfig.HTTP_server_host)
+    }
     ctx.set('Access-Control-Allow-Origin', '*')
-    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Access-Token')
-    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, access-token')
+    ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS, PATCH')
     ctx.set('Access-Control-Allow-Credentials', true) // 允许带上 cookie
     return next()
   })
@@ -80,19 +80,21 @@ app
           ...decoded
         }
       } catch (err) {
+        // 验证失败
         // console.log('your token verify is not valid')
       }
     }
-    // console.log('authorization: ', authorization)
+    console.log('authorization: ', authorization)
     return next()
   })
   .use(KoaBody({
     multipart: true,
     strict: false,
     formidable: {
-      uploadDir: path.join(__dirname, '../assets/uploads/tmp')
+      uploadDir: path.join(__dirname, '../assets/uploads/tmp'),
+      maxFileSize: 100 * 1024 * 1024
     },
-    jsonLimit: '10mb',
+    jsonLimit: '100mb',
     formLimit: '10mb',
     textLimit: '10mb'
   })) // Processing request
