@@ -93,8 +93,8 @@ const PersonSchema = new Schema({
 
   // ],
 }, {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
-  })
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+})
 
 PersonSchema.set('toObject', {
   transform: function (doc, ret, options) {

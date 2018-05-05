@@ -18,6 +18,10 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  avatar_url: {
+    type: String,
+    default: ''
+  },
   person_id: { // 用户唯一角色的id
     type: String
   },
@@ -37,6 +41,7 @@ UserSchema.set('toObject', {
     ret.id = ret._id
     delete ret._id
     delete ret.__v
+    delete ret.password // no password to client
   }
 })
 

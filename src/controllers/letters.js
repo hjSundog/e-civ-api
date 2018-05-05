@@ -1,6 +1,6 @@
-const omit = require('../lib/omit')
 const Letter = require('../models/letter')
 const User = require('../models/user')
+const mongoose = require('mongoose')
 
 const authInterceptor = require('../tool/Auth').authInterceptor
 
@@ -10,9 +10,6 @@ const handleError = (err) => {
 
 const GetListByOwn = async (ctx) => {
   // 身份认证拦截器
-  if (!authInterceptor(ctx)) {
-    return
-  }
   const user = ctx.header.authorization.decoded
   const userDoc = await User.findOne()
     .where('name').equals(user.name)
@@ -25,18 +22,20 @@ const GetListByOwn = async (ctx) => {
   const sort = parseInt(ctx.query.sort) || 'asc'
 
   const letterCount = await Letter
-    .where({ $or: [{to_user_id: userDoc.id}, {from_user_id: userDoc.id}] })
+    .where({ $or: [{to_user: userDoc.id}, {from_user: userDoc.id}] })
     .count()
     .exec(function (err, count) {
       if (err) handleError(err)
     })
   await Letter.find()
-    .where({ $or: [{to_user_id: userDoc.id}, {from_user_id: userDoc.id}] })
+    .where({ $or: [{to_user: userDoc.id}, {from_user: userDoc.id}] })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
     .sort({
       created_at: sort
     })
+    .populate('from_user')
+    .populate('to_user')
     .exec(function (err, letterDocs) {
       if (err) handleError(err)
       ctx.body = {
@@ -66,7 +65,7 @@ const Get = async (ctx) => {
     .where({ _id: letterId })
     .exec(function (err, letterDoc) {
       if (err) handleError(err)
-      if (userDoc.id !== letterDoc.to_user_id && userDoc.id !== letterDoc.from_user_id) {
+      if (userDoc.id !== letterDoc.to_user && userDoc.id !== letterDoc.from_user) {
         ctx.response.status = 403
         ctx.body = {
           err: 'Read others letter is forbidden'
@@ -91,8 +90,8 @@ const Post = async (ctx) => {
   var letter = new Letter({
     title: data.title,
     content: data.content,
-    from_user_id: user.id,
-    to_user_id: data.to_user_id
+    from_user: mongoose.Types.ObjectId(user.id),
+    to_user: data.to_user
   })
   await letter.save(function (err, letter) {
     if (err) handleError(err)

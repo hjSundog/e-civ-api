@@ -4,7 +4,6 @@
 exports.authInterceptor = (ctx, interceptor = {}) => {
   const _defaultInterceptor = {
     validator: (ctx) => {
-      debugger
       if (ctx.header.authorization.decoded) {
         return true
       }

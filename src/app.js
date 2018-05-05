@@ -81,7 +81,7 @@ app
         }
       } catch (err) {
         // 验证失败
-        // console.log('your token verify is not valid')
+        console.log('your token verify is not valid')
       }
     }
     console.log('authorization: ', authorization)

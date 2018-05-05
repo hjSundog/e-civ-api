@@ -158,9 +158,9 @@ const Post = async (ctx) => {
   await person.save(function (err, person) {
     if (err) handleError(err)
 
-    ctx.body = omit({
+    ctx.body = {
       ...person.toObject()
-    }, ['_id', '__v'])
+    }
   })
   // 更新user的person_id
   userDoc.person_id = person.id

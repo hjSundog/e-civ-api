@@ -10,12 +10,14 @@ const LetterSchema = new Schema({
     type: String,
     required: true
   },
-  from_user_id: {
-    type: String,
+  from_user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
-  to_user_id: {
-    type: String,
+  to_user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   }
 }, {
