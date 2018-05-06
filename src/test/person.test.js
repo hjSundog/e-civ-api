@@ -622,9 +622,7 @@ describe('Map', () => {
         expect(res.body.conditions).to.be.an('object')
         expect(res.body).to.have.property('attributes')
         expect(res.body.attributes).to.be.an('object')
-        done()
-      })
-  })
+        done() 
 
 })
 
