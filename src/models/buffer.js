@@ -30,4 +30,4 @@ BufferSchema.set('toObject', {
   }
 })
 
-module.exports = mongoose.model('Buffer', BufferSchema)
+module.exports = mongoose.model('Buffer', BufferSchema, 'buffers')

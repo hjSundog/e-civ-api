@@ -164,4 +164,4 @@ ItemSchema.statics.getTpl = (tpl) => {
   return Tpls.get(tpl)
 }
 
-module.exports = mongoose.model('Item', ItemSchema)
+module.exports = mongoose.model('Item', ItemSchema, 'items')

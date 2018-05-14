@@ -34,4 +34,4 @@ ActionSchema.set('toObject', {
   }
 })
 
-module.exports = mongoose.model('Action', ActionSchema)
+module.exports = mongoose.model('Action', ActionSchema, 'actions')

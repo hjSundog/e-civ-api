@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const FriendsSchema = new Schema({
+const FriendSchema = new Schema({
   person_id: Schema.Types.ObjectId,
   friends: [{
     person_id: Schema.Types.ObjectId
   }]
 })
 
-FriendsSchema.set('toObject', {
+FriendSchema.set('toObject', {
   transform: function (doc, ret, options) {
     ret.id = ret._id
     delete ret._id
@@ -16,4 +16,4 @@ FriendsSchema.set('toObject', {
   }
 })
 
-module.exports = mongoose.model('Friends', FriendsSchema)
+module.exports = mongoose.model('Friend', FriendSchema, 'friends')

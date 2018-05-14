@@ -1,30 +1,32 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const LetterSchema = new Schema({
-  title: {
+const ResourceSchema = new Schema({
+  name: {
     type: String,
     required: true
   },
-  content: {
+  type: {
     type: String,
     required: true
   },
-  from_user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+  intro: {
+    type: String,
     required: true
   },
-  to_user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+  position: {
+    lat: {
+      type: Number
+    },
+    lon: {
+      type: Number
+    }
   }
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
 
-LetterSchema.set('toObject', {
+ResourceSchema.set('toObject', {
   transform: function (doc, ret, options) {
     ret.id = ret._id
     delete ret._id
@@ -32,4 +34,4 @@ LetterSchema.set('toObject', {
   }
 })
 
-module.exports = mongoose.model('Letter', LetterSchema, 'letters')
+module.exports = mongoose.model('Resource', ResourceSchema, 'resources')

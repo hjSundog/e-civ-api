@@ -5,6 +5,7 @@ const letterRoutes = require('./letter-routes')
 const personRoutes = require('./person-routes')
 const belongingRoutes = require('./belonging-routes')
 const gameRoutes = require('./game-routes')
+const mapRoutes = require('./map-routes')
 
 const router = compose([
   mainRoutes.routes(),
@@ -17,6 +18,8 @@ const router = compose([
   belongingRoutes.allowedMethods(),
   personRoutes.routes(),
   personRoutes.allowedMethods(),
+  mapRoutes.routes(),
+  mapRoutes.allowedMethods(),
   gameRoutes.routes(),
   gameRoutes.allowedMethods()
 ])

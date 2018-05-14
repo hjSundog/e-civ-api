@@ -57,4 +57,4 @@ SkillSchema.set('toObject', {
   }
 })
 
-module.exports = mongoose.model('Skill', SkillSchema)
+module.exports = mongoose.model('Skill', SkillSchema, 'skills')

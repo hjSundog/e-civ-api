@@ -230,4 +230,4 @@ PersonSchema.statics.findByIdAndRemoveItem = async function (personId, itemId, c
   return rt
 }
 
-module.exports = mongoose.model('Person', PersonSchema)
+module.exports = mongoose.model('Person', PersonSchema, 'people')
