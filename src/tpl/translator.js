@@ -1,9 +1,7 @@
 // 根据模板生成真的数据
 // 类似于redux的东西，把所有模板集合起来
-const Tpls = require('./ItemTpl')
-const Holder = new Map()
 
-const toMapTpl = (tpl, deep) => {
+const toMapTpl = (tpl, deep, Holder) => {
   let cache = Object.entries(tpl)
   for (let i = 0; i < deep; i++) {
     let length = cache.length
@@ -21,4 +19,7 @@ const toMapTpl = (tpl, deep) => {
   return Holder
 }
 
-module.exports = toMapTpl(Tpls, 3)
+module.exports = (tpl, depth) => {
+  const Holder = new Map()
+  return toMapTpl(tpl, depth, Holder)
+}

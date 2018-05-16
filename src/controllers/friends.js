@@ -1,5 +1,5 @@
 const omit = require('../lib/omit')
-const Friend = require('../models/friend')
+const Friends = require('../models/friend')
 
 const GetByUserId = async (ctx) => {
   // 验证jwt，解析userID或者其他

@@ -2,7 +2,8 @@
 
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const Tpls = require('../tpl/translator')
+const translator = require('../tpl/translator')
+const Tpls = translator(require('../tpl/ItemTpl'), 3)
 const ItemSchema = new Schema({
   owner_id: {
     type: Schema.Types.ObjectId
