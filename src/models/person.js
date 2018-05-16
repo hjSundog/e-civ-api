@@ -38,8 +38,11 @@ const PersonSchema = new Schema({
     }
   },
   current: { // 现在的状态
-    type: String,
-    enum: ['in battle', 'moving', 'waitting', 'working']
+    type: {
+      type: String,
+      enum: ['idle', 'moving', 'working', 'fighting']
+    },
+    meta: Schema.Types.Mixed
   },
 
   items: [{

@@ -14,6 +14,9 @@ const ResourceSchema = new Schema({
     type: String,
     required: true
   },
+  image_url: {
+    type: String
+  },
   position: {
     lat: {
       type: Number

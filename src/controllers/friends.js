@@ -1,5 +1,5 @@
 const omit = require('../lib/omit')
-const Friends = require('../models/friends')
+const Friend = require('../models/friend')
 
 const GetByUserId = async (ctx) => {
   // 验证jwt，解析userID或者其他
@@ -9,7 +9,7 @@ const GetByUserId = async (ctx) => {
 const GetByOwn = async (ctx) => {
   // 验证jwt，解析userID或者其他
 
-  await Friends.find()
+  await Friend.find()
     // .equals() 只获取自己的letter
     .select({ person_id: 1, friends: 1 })
     .exec((err, friendsDocs) => {
@@ -27,7 +27,7 @@ const GetByOwn = async (ctx) => {
 const AddFriend = async (ctx) => {
   const data = ctx.request.body
   // TODO: 补全userid部分
-  var letter = new Friends({
+  var letter = new Friend({
     title: data.title,
     content: data.content,
     from_userid: null,

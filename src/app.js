@@ -16,6 +16,7 @@ const customizedLogger = require('./tool/customized-winston-logger')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const mongoose = require('mongoose')
+const kafka = require('kafka-node')
 // import PluginLoader from './lib/PluginLoader'
 
 global.logger = customizedLogger
@@ -27,6 +28,22 @@ mongoose.connection.on('connected', () => {
   console.log('Mongoose connection open to ' + DBConfig.url)
 })
 mongoose.connection.on('error', console.error)
+
+const client = new kafka.KafkaClient()
+const Producer = kafka.Producer
+const KeyedMessage = kafka.KeyedMessage
+const producer = new Producer(client)
+const km = new KeyedMessage('key', 'message')
+const payloads = [
+  { topic: 'topic1', messages: 'hi', partition: 0 },
+  { topic: 'topic2', messages: ['hello', 'world', km] }
+]
+producer.on('ready', function () {
+  console.log('kafka ready')
+  producer.send(payloads, function (err, data) {
+    console.log(data)
+  })
+})
 
 const app = new Koa2()
 const env = process.env.NODE_ENV || 'development' // Current mode
