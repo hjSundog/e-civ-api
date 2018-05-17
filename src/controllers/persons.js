@@ -222,6 +222,11 @@ const GetAllItems = async (ctx) => {
     }
     return
   }
+  let hasType = ctx.query.type?true:false
+  if (hasType) {
+    await GetItemsOf(ctx)
+    return 
+  }
   await Person.findById(ctx.params.id)
     .populate('items')
     .exec((err, ItemsDoc) => {
@@ -274,7 +279,7 @@ const GetItemsOf = async (ctx) => {
     .where('_id').equals(ctx.params.id)
     .populate({
       path: 'items',
-      match: { type: ctx.search.type }
+      match: { type: ctx.query.type }
     })
     .exec((err, ItemsDoc) => {
       if (err) {

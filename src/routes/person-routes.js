@@ -9,7 +9,6 @@ router
   .delete('/:id', controllers.persons.Delete)
   .post('/:id/items', controllers.persons.CreateItem)
   .get('/:id/items', controllers.persons.GetAllItems)
-  .get('/:id/items?type=:type', controllers.persons.GetItemsOf)
   .get('/:id/items/:itemId', controllers.persons.GetItem)
   .delete('/:id/items/:itemId', controllers.persons.UseItem)
 module.exports = router

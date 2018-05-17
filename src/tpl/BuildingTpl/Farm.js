@@ -6,26 +6,30 @@ const Buildings = {
   actions: [{
     operation: 'upgrade',
     name: '升级',
-    need: [{
-      name: 'Gold',
-      count: 100
-    }, {
-      name: 'Wood',
-      count: 100
-    }],
-    stamina: 5,
-    duration: 60
-  }, {
-    operation: ''
+    api: '/actions/upgrade?id=:id&target=Building'
+    // need: [{
+    //   name: 'Gold',
+    //   count: 100
+    // }, {
+    //   name: 'Wood',
+    //   count: 100
+    // }],
+    // stamina: 5,
+    // duration: 60
   }, {
     operation: 'plant',
     name: '种植',
-    need: [{
-      name: 'Gold',
-      count: 200
-    }],
-    stamina: 5,
-    duration: 120
+    api: '/actions/plant?id=:id&target=Building'
+    // need: [{
+    //   name: 'Gold',
+    //   count: 200
+    // }],
+    // stamina: 5,
+    // duration: 120
+  }, {
+    operation: 'Harvest',
+    name: '收割',
+    api: '/actions/harvest?id=:id&target=Building'
   }]
 }
 

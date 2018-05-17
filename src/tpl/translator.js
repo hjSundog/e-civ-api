@@ -1,7 +1,7 @@
 // 根据模板生成真的数据
 // 类似于redux的东西，把所有模板集合起来
 
-const toMapTpl = (tpl, deep, Holder) => {
+const toMapTpl = (tpl, deep = 1, Holder) => {
   let cache = Object.entries(tpl)
   for (let i = 0; i < deep; i++) {
     let length = cache.length

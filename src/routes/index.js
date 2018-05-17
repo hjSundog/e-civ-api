@@ -7,6 +7,7 @@ const belongingRoutes = require('./belonging-routes')
 const gameRoutes = require('./game-routes')
 const mapRoutes = require('./map-routes')
 const buildignRoutes = require('./building-routes')
+const actionRoutes = require('./action-routes')
 
 const router = compose([
   mainRoutes.routes(),
@@ -24,7 +25,9 @@ const router = compose([
   gameRoutes.routes(),
   gameRoutes.allowedMethods(),
   buildignRoutes.routes(),
-  buildignRoutes.allowedMethods()
+  buildignRoutes.allowedMethods(),
+  actionRoutes.routes(),
+  actionRoutes.allowedMethods(),
 ])
 
 module.exports = router

@@ -103,7 +103,7 @@ const GetTypeOfBuilding = async (ctx) => {
   if (!authInterceptor(ctx)) {
     return
   }
-  if (!ctx.search.type) {
+  if (!ctx.query.type) {
     ctx.response.status = 422
     ctx.body = {
       err: 'No Search Param'
@@ -112,7 +112,7 @@ const GetTypeOfBuilding = async (ctx) => {
   }
   let data
   try {
-    data = ctx.search.type
+    data = ctx.query.type
   } catch (e) {
     handleError(e)
   }
