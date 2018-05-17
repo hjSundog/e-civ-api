@@ -84,7 +84,13 @@ const PersonSchema = new Schema({
       type: Number
     }
   },
-  description: String
+  description: String,
+  relationship: {
+    friends: [String],
+    blackmenu: [String],
+    latest: [String],
+    strangers: [String]
+  }
   // // GUILD PART
   // guilds: [ // 加入的工会ID集
 
