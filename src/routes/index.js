@@ -27,7 +27,7 @@ const router = compose([
   buildignRoutes.routes(),
   buildignRoutes.allowedMethods(),
   actionRoutes.routes(),
-  actionRoutes.allowedMethods(),
+  actionRoutes.allowedMethods()
 ])
 
 module.exports = router
