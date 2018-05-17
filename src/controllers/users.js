@@ -95,7 +95,7 @@ const Login = async (ctx) => {
       console.log(`isMatch: ${isMatch}`)
       if (isMatch) {
         // 如果匹配则生成token
-        const token = jwt.sign(openInfo, publicKey, { expiresIn: '24h' })
+        const token = jwt.sign(openInfo, publicKey, { expiresIn: '72h' })
         ctx.body = {
           ...openInfo,
           token
