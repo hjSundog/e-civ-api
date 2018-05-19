@@ -8,7 +8,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Node调试",
+      "name": "Node调试API",
       "program": "${workspaceFolder}/src/app.js"
     },
     {
