@@ -27,7 +27,7 @@ const GetById = async (ctx) => {
       if (!personDoc) {
         ctx.response.status = 404
         ctx.body = {
-          err: 'Not Found'
+          err: 'Not Found Person'
         }
         return
       }

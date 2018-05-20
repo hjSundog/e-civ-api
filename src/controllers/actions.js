@@ -27,15 +27,13 @@ const doAction = async (ctx) => {
   if (tpls.operation === 'walk') {
     const user = ctx.header.authorization.decoded
     const personDoc = await Person.findOne({user_id: user.id})
-    if (personDoc.current.toObject() !== 'idle') {
-      throw Error('当前人物不在空闲状态')
-    }
+    // if (personDoc.current.toObject() !== 'idle') {
+    //   throw Error('当前人物不在空闲状态')
+    // }
     await Person.update({_id: personDoc._id}, {$set: { current: 'moving' }})
     const targetPosition = {
-      // lon: ctx.query.lon,
-      // lat: ctx.query.lat
-      lon: 60,
-      lat: 24
+      lon: ctx.request.body.lon,
+      lat: ctx.request.body.lat
     }
     const startPosition = personDoc.position
 
@@ -45,7 +43,7 @@ const doAction = async (ctx) => {
     }
     let count = 0
 
-    const job = schedule.scheduleJob('* /1 * * * *', function () {
+    const job = schedule.scheduleJob('/1 * * * * *', function () {
       console.log('position timer task')
       count++
       Person.update(
@@ -54,14 +52,24 @@ const doAction = async (ctx) => {
           $set: {
             'position.lon': startPosition.lon + error.lon * count,
             'position.lat': startPosition.lat + error.lat * count
-
           }
+        }, (err) => {
+          console.log(err)
+          const keyedMessage = new ctx.kafka.KeyedMessage('updatePerson', personDoc._id)
+          ctx.kafka.producer.send([
+            { topic: 'websocket-api', partition: 0, messages: [keyedMessage], attributes: 0 }
+          ])
         }
       )
       if (count === 5) {
+        Person.update({_id: personDoc._id}, {$set: { current: 'idle' }})
+        console.log('moving end')
         job.cancel()
       }
     })
+    ctx.body = {
+      duration: 5
+    }
   }
 }
 

@@ -31,18 +31,19 @@ mongoose.connection.on('error', console.error)
 
 const client = new kafka.KafkaClient()
 const Producer = kafka.Producer
-const KeyedMessage = kafka.KeyedMessage
 const producer = new Producer(client)
-const km = new KeyedMessage('key', 'message')
-const payloads = [
-  { topic: 'topic1', messages: 'hi', partition: 0 },
-  { topic: 'topic2', messages: ['hello', 'world', km] }
-]
+const KeyedMessage = kafka.KeyedMessage
 producer.on('ready', function () {
-  console.log('kafka ready')
-  producer.send(payloads, function (err, data) {
-    console.log(data)
+  console.log('kafka producer ready')
+  producer.send([
+    { topic: 'websocket-api', partition: 0, messages: ['start'], attributes: 0 }
+  ], function (err, result) {
+    console.log(err || result)
+    process.exit()
   })
+})
+producer.on('error', function (err) {
+  console.log('kafka producer error: ', err)
 })
 
 const app = new Koa2()
@@ -116,6 +117,12 @@ app
     textLimit: '10mb'
   })) // Processing request
   // .use(PluginLoader(SystemConfig.System_plugin_path))
+  .use((ctx, next) => {
+    ctx.kafka = {}
+    ctx.kafka.producer = producer
+    ctx.kafka.KeyedMessage = KeyedMessage
+    next()
+  })
   .use(routes)
   .use(ErrorRoutes())
 app.listen(SystemConfig.API_server_port)

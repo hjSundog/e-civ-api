@@ -50,7 +50,7 @@ const GetById = async (ctx) => {
       if (!userDoc) {
         ctx.response.status = 404
         ctx.body = {
-          err: 'Not Found'
+          err: 'Not Found User'
         }
         return
       }

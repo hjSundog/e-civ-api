@@ -102,6 +102,8 @@ const PersonSchema = new Schema({
 PersonSchema.set('toObject', {
   transform: function (doc, ret, options) {
     ret.id = ret._id
+    ret.position.lat = ret.position.lat.toFixed(6)
+    ret.position.lon = ret.position.lon.toFixed(6)
     delete ret._id
     delete ret.__v
   }
