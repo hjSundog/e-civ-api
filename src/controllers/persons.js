@@ -334,6 +334,10 @@ const CreateItem = async ctx => {
       if (err) {
         throw new Error(err.toString())
       }
+      if (!ItemsDoc) {
+        mustCreate = true
+        return
+      }
       let rt = ItemsDoc.items.some(Item => {
         if (Item.toObject().name === data.type) {
           targetItem = Item

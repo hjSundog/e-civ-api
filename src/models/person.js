@@ -157,6 +157,9 @@ PersonSchema.statics.findByIdAndCreateItem = async function ({ id, type, count }
         throw new Error(err)
       }
     })
+  if (!person) {
+    return
+  }
   person.items.push(item._id)
   await person.save((err, person) => {
     if (err) {
